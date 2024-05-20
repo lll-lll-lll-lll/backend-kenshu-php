@@ -1,0 +1,13 @@
+{
+    "require": {
+    },
+    "require-dev": {
+      "phpunit/phpunit": "11.1.3"
+    },  
+    "autoload": {
+      "psr-4": {
+          "Kenshu\\": "src/"
+      }
+  }
+  }
+  
