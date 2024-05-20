@@ -3,7 +3,7 @@ CREATE TABLE `user` (
   `name` varchar(255),
   `mail` varchar(255) UNIQUE NOT NULL,
   `password` varchar(255) UNIQUE NOT NULL,
-  `profile_url` varchar(255),
+  `profile_url` TEXT,
   `created_at` timestamp,
   `updated_at` timestamp
 );
@@ -18,7 +18,7 @@ CREATE TABLE `user_unsubscribed` (
 CREATE TABLE `article` (
   `id` integer PRIMARY KEY,
   `title` varchar(255),
-  `contents` varchar(255),
+  `contents` TEXT,
   `created_at` timestamp,
   `user_id` integer
 );
@@ -32,7 +32,7 @@ CREATE TABLE `article_deleted` (
 
 CREATE TABLE `article_image` (
   `id` integer PRIMARY KEY,
-  `url` varchar(255),
+  `url`TEXT,
   `created_at` timestamp,
   `article_id` integer
 );
