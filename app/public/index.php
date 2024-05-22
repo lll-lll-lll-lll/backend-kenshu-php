@@ -1,7 +1,10 @@
 <?php
-require __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
+
+use App\Handler\ArticleHandler;
 
 try {
+    $article_handler = new ArticleHandler();
     $dsn = 'pgsql:host=postgresql;dbname=db;user=root;password=password';
     $db = new PDO($dsn);
 
