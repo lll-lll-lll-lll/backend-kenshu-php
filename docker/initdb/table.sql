@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     profile_url text NOT NULL,
     created_at timestamp default CURRENT_TIMESTAMP,
     updated_at timestamp default CURRENT_TIMESTAMP
-    );
+);
 
 
 CREATE TABLE IF NOT EXISTS "article" (
