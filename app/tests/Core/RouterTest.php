@@ -21,7 +21,7 @@ class RouterTest extends TestCase
         $expected = '';
         $router = new Router();
         $router->add('GET', '/', function () use ($articleHandler) {
-            $articleHandler->execute( new CreateArticleRequest('', '', 1));
+            $articleHandler->execute( new CreateArticleRequest('test', 'test', 1));
         });
 
         ob_start();
