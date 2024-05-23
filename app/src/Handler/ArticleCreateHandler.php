@@ -12,7 +12,7 @@ class ArticleCreateHandler
     public CreateArticleUseCase $articleCreateUseCase;
     public  function __construct(CreateArticleUseCase $articleCreateUseCase)
     {
-     $this->articleCreateUseCase = $articleCreateUseCase;
+        $this->articleCreateUseCase = $articleCreateUseCase;
     }
     public function execute(CreateArticleRequest $req): int
     {
