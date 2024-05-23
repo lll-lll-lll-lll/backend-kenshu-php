@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "user" (
+CREATE TABLE  "user" (
     id serial PRIMARY KEY,
     name varchar(255) NOT NULL,
     mail varchar(255) UNIQUE NOT NULL,
@@ -53,3 +53,6 @@ CREATE TRIGGER trigger_update_updated_at_column
 BEFORE UPDATE ON "user"
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+
+INSERT INTO "user" (name, mail, password, profile_url) VALUES ('John Doe', 'john.doe@example.com', 'securepassword', 'http://example.com/johndoe');
