@@ -19,7 +19,6 @@ class RouterTest extends TestCase
         $articleHandler = new ArticleCreateHandler( new CreateArticleUseCase($this->createRepository));
         $path = '/';
         $expected = '';
-        $createRepository =
         $router = new Router();
         $router->add('GET', '/', function () use ($articleHandler) {
             $articleHandler->execute( new CreateArticleRequest('', '', 1));
