@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  postgresql:
+    image: postgres:16
+    container_name: postgresql
+    restart: always
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./docker/initdb:/docker-entrypoint-initdb.d
+  php:
+    container_name: php
+    build:
+      context: ./app
+    ports:
+      - '8080:80'
+    volumes:
+      - ./app:/var/www/html
+      - ./apache/httpd.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - postgresql
+
+volumes:
+  postgres_data:
