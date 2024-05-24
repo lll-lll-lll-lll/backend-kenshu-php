@@ -3,19 +3,31 @@ declare(strict_types=1);
 
 namespace App\UseCase;
 
-use App\Model\Article;
-use App\Repository\Article\ICreateRepository;
+use App\Repository\CreateArticleRepository;
+use Exception;
+use PDO;
+use PDOException;
 
-class CreateArticleUseCase
+class CreateArticleUseCase implements ICreateArticleUseCase
 {
-    private ICreateRepository $createRepository;
-    public function __construct(ICreateRepository $createRepository)
+    private PDO $pdo;
+    private CreateArticleRepository $createRepository;
+    public function __construct(PDO $pdo, CreateArticleRepository $createRepository)
     {
+        $this->pdo = $pdo;
         $this->createRepository = $createRepository;
     }
 
     public function execute(string $title, string $contents, int $user_id): int
     {
-        return $this->createRepository->execute($title,$contents,$user_id);
+        try {
+            $this->pdo->beginTransaction();
+            $lastInsertedID = $this->createRepository->execute($this->pdo, $title, $contents, $user_id);
+            $this->pdo->commit();
+            return $lastInsertedID;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw new PDOException($e->getMessage());
+        }
     }
 }

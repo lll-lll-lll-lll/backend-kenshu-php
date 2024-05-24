@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\MockRepository;
+namespace App\MockUseCase;
 
-use App\Repository\Article\ICreateRepository;
+use App\UseCase\ICreateArticleUseCase;
 
-class CreateArticleMockRepository  implements  ICreateRepository
+class CreateArticleMockUseCase  implements  ICreateArticleUseCase
 {
     public function execute(string $title, string $contents, int $user_id): int
     {

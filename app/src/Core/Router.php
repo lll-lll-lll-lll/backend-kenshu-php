@@ -6,7 +6,7 @@ namespace App\Core;
 class Router {
     private array $routes = [];
 
-    public function add($method, $route, $callback): void
+    public function add(string $method,string $route, callable $callback): void
     {
         $this->routes[] = [
             'method' => $method,
@@ -15,7 +15,7 @@ class Router {
         ];
     }
 
-    public function dispatch($requestUri, $requestMethod): void
+    public function dispatch(string $requestUri, string $requestMethod): void
     {
         foreach ($this->routes as $route) {
             if ($route['route'] === $requestUri && $route['method'] === $requestMethod) {

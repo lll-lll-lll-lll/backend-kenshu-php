@@ -4,19 +4,24 @@ namespace Core;
 
 use App\Core\Router;
 use App\Handler\ArticleCreateHandler;
-use App\MockRepository\CreateArticleMockRepository;
-use App\Repository\Article\ICreateRepository;
+use App\MockUseCase\CreateArticleMockUseCase;
+use App\Repository\CreateArticleRepository;
 use App\Request\CreateArticleRequest;
-use App\UseCase\CreateArticleUseCase;
+use App\UseCase\ICreateArticleUseCase;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
-    private ICreateRepository $createRepository;
+    private ICreateArticleUseCase $createArticleUseCase;
+    public ArticleCreateHandler $articleHandler;
+    public function setup():void {
+        $this->createArticleUseCase = new CreateArticleMockUseCase(new CreateArticleRepository());
+        $this->articleHandler = new ArticleCreateHandler($this->createArticleUseCase);
+
+    }
     public function testDispatchSuccess()
     {
-        $this->createRepository = new CreateArticleMockRepository();
-        $articleHandler = new ArticleCreateHandler( new CreateArticleUseCase($this->createRepository));
+        $articleHandler = new ArticleCreateHandler($this->createArticleUseCase);
         $path = '/';
         $expected = '';
         $router = new Router();
@@ -31,14 +36,12 @@ class RouterTest extends TestCase
     }
     public function testDispatch404()
     {
-        $this->createRepository = new CreateArticleMockRepository();
-        $articleHandler = new ArticleCreateHandler( new CreateArticleUseCase($this->createRepository));
         $notFoundPath = '/test';
         $expected = '404 Not Found';
 
         $router = new Router();
-        $router->add('GET', '/', function () use ($articleHandler) {
-            $articleHandler->execute(new CreateArticleRequest('title', 'contents', 1));
+        $router->add('GET', '/', function () {
+            $this->articleHandler->execute(new CreateArticleRequest('title', 'contents', 1));
         });
 
         ob_start();

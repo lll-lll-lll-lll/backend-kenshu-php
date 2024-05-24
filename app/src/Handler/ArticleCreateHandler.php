@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Model\Article;
 use App\Request\CreateArticleRequest;
-use App\Usecase\CreateArticleUseCase;
+use App\UseCase\ICreateArticleUseCase;
 
 class ArticleCreateHandler
 {
-    public CreateArticleUseCase $articleCreateUseCase;
-    public  function __construct(CreateArticleUseCase $articleCreateUseCase)
+    public ICreateArticleUseCase $articleCreateUseCase;
+    public function __construct(ICreateArticleUseCase $articleCreateUseCase)
     {
         $this->articleCreateUseCase = $articleCreateUseCase;
     }
