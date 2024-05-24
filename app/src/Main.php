@@ -34,11 +34,11 @@ class Main
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->router->add('POST', '/article', function () {
+        $this->router->add('POST', '/api/articles', function () {
             $this->articleCreateHandler->execute();
         });
 
-        $this->router->add('POST', '/users', function () {
+        $this->router->add('POST', '/api/users', function () {
             $this->userCreateHandler->execute();
         });
         try {
