@@ -31,14 +31,7 @@ class Main
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->router->add('POST', '/article', function () {
-            try {
-                $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], $_POST['user_id']);
-                $this->articleCreateHandler->execute($req);
-                http_response_code(201);
-                return;
-            } catch (Exception $e) {
-                throw  new Exception($e->getMessage());
-            }
+            $this->articleCreateHandler->execute();
         });
         try {
             $this->router->dispatch($requestUri, $requestMethod);
