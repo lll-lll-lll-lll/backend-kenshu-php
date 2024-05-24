@@ -3,15 +3,19 @@ declare(strict_types=1);
 
 namespace App\UseCase\User;
 
+use App\Model\UserPassword;
 use App\Repository\CreateUserRepository;
 use App\Request\CreateUserRequest;
 use Exception;
 use PDO;
 use PDOException;
 
-class CreateUserUseCase implements ICreateUserUseCase
+class
+
+CreateUserUseCase implements ICreateUserUseCase
 {
     private PDO $pdo;
+    private UserPassword $userPassword;
 
     private CreateUserRepository $createUserRepository;
 
@@ -25,7 +29,8 @@ class CreateUserUseCase implements ICreateUserUseCase
     {
         $this->pdo->beginTransaction();
         try {
-            $this->createUserRepository->execute($this->pdo, $req->user_name, $req->mail, $req->hash_password, $req->profile_url);
+            $this->userPassword = new UserPassword($req->password);
+            $this->createUserRepository->execute($this->pdo, $req->user_name, $req->mail, $this->userPassword->getHashPassword(), $req->profile_url);
             $this->pdo->commit();
         } catch (Exception $e) {
             $this->pdo->rollBack();

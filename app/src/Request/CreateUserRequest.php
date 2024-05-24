@@ -9,9 +9,10 @@ class CreateUserRequest
 {
     public string $user_name;
     public string $mail;
-    public string $hash_password;
     // プロフィール画像は任意なので空文字で初期化
     public string $profile_url = '';
+
+    public string $password;
 
     public function __construct(string $user_name, string $mail, string $password, string $profile_url = '')
     {
@@ -24,10 +25,10 @@ class CreateUserRequest
                 throw new InvalidArgumentException('Invalid profile url');
             }
         }
-        $this->hash_password = password_hash($password, PASSWORD_DEFAULT);
         $this->user_name = $user_name;
         $this->mail = $mail;
         $this->profile_url = $profile_url;
+        $this->password = $password;
     }
 
 
