@@ -15,7 +15,7 @@ class RouterTest extends TestCase
     private ICreateArticleUseCase $createArticleUseCase;
     public ArticleCreateHandler $articleHandler;
     public function setup():void {
-        $this->createArticleUseCase = new CreateArticleMockUseCase(new CreateArticleRepository());
+        $this->createArticleUseCase = new CreateArticleMockUseCase();
         $this->articleHandler = new ArticleCreateHandler($this->createArticleUseCase);
 
     }
