@@ -32,7 +32,7 @@ class Main
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->router->add('POST', '/article', function () {
             try {
-                $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], (int)$_POST['user_id']);
+                $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], $_POST['user_id']);
                 $this->articleCreateHandler->execute($req);
                 http_response_code(201);
                 return;
