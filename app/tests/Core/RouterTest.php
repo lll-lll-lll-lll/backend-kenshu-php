@@ -21,12 +21,11 @@ class RouterTest extends TestCase
     }
     public function testDispatchSuccess()
     {
-        $articleHandler = new ArticleCreateHandler($this->createArticleUseCase);
         $path = '/';
         $expected = '';
         $router = new Router();
-        $router->add('GET', '/', function () use ($articleHandler) {
-            $articleHandler->execute( new CreateArticleRequest('test', 'test', 1));
+        $router->add('GET', '/', function (){
+        $this->articleHandler->execute( new CreateArticleRequest('test', 'test', 1));
         });
 
         ob_start();
@@ -37,16 +36,12 @@ class RouterTest extends TestCase
     public function testDispatch404()
     {
         $notFoundPath = '/test';
-        $expected = '404 Not Found';
-
         $router = new Router();
         $router->add('GET', '/', function () {
             $this->articleHandler->execute(new CreateArticleRequest('title', 'contents', 1));
         });
 
-        ob_start();
         $router->dispatch($notFoundPath, 'GET');
-        $output = ob_get_clean();
-        $this->assertEquals($expected, $output);
+        $this->assertEquals(404, http_response_code());
     }
-}
+    }

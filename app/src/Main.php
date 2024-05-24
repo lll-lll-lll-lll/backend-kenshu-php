@@ -9,8 +9,8 @@ use App\Handler\ArticleCreateHandler;
 use App\Repository\CreateArticleRepository;
 use App\Request\CreateArticleRequest;
 use App\UseCase\CreateArticleUseCase;
+use Exception;
 use PDO;
-use PDOException;
 
 class Main
 {
@@ -35,11 +35,15 @@ class Main
                 $this->articleCreateHandler->execute($req);
                 http_response_code(201);
             }
-            catch (PDOException $e){
-                http_response_code(500);
-                echo 'Internal Server Error';
+            catch (Exception $e){
+                throw  new Exception($e->getMessage());
             }
         });
-        $this->router->dispatch($requestUri, $requestMethod);
+        try {
+            $this->router->dispatch($requestUri, $requestMethod);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo 'Internal Server Error';
+        }
     }
 }
