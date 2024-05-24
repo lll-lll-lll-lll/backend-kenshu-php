@@ -5,5 +5,5 @@ namespace App\UseCase;
 
 interface ICreateArticleUseCase
 {
-    public function execute( string $title, string $contents, int $user_id): int;
+    public function execute(string $title, string $contents, int $user_id): int;
 }
