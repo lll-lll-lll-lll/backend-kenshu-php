@@ -10,7 +10,7 @@ class CreateUserRequest
     public string $user_name;
     public string $mail;
     // プロフィール画像は任意なので空文字で初期化
-    public string $profile_url = '';
+    public string $profile_url;
 
     public string $password;
 
@@ -19,18 +19,20 @@ class CreateUserRequest
         $this->validateEmail($mail);
         $this->validatePassword($password);
         $this->validateUserName($user_name);
+        $this->validateProfileUrl($profile_url);
 
-        if (!empty($profile_url)) {
-            if (!filter_var($profile_url, FILTER_VALIDATE_URL)) {
-                throw new InvalidArgumentException('Invalid profile url');
-            }
-        }
+        $this->profile_url = $profile_url;
         $this->user_name = $user_name;
         $this->mail = $mail;
-        $this->profile_url = $profile_url;
         $this->password = $password;
     }
 
+    private function validateProfileUrl(string $profile_url): void
+    {
+        if (!empty($profile_url) && !filter_var($profile_url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('無効なプロフィールURLです');
+        }
+    }
 
     private function validateEmail(string $email): void
     {
