@@ -12,36 +12,30 @@ use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
-    private ICreateArticleUseCase $createArticleUseCase;
-    public ArticleCreateHandler $articleHandler;
-    public function setup():void {
-        $this->createArticleUseCase = new CreateArticleMockUseCase();
-        $this->articleHandler = new ArticleCreateHandler($this->createArticleUseCase);
+    private Router $router;
 
+    public function setup(): void
+    {
+        $this->router = new Router();
     }
+
     public function testDispatchSuccess()
     {
         $path = '/';
-        $expected = '';
-        $router = new Router();
-        $router->add('GET', '/', function (){
-        $this->articleHandler->execute( new CreateArticleRequest('test', 'test', 1));
+        $this->router->add('GET', $path, function () {
+            http_response_code(201);
         });
 
-        ob_start();
-        $router->dispatch($path, 'GET');
-        $output = ob_get_clean();
-        $this->assertEquals($expected, $output);
+        $this->router->dispatch($path, 'GET');
+        $this->assertEquals(201, http_response_code());
     }
+
     public function testDispatch404()
     {
         $notFoundPath = '/test';
-        $router = new Router();
-        $router->add('GET', '/', function () {
-            $this->articleHandler->execute(new CreateArticleRequest('title', 'contents', 1));
+        $this->router->add('GET', '/', function () {
         });
-
-        $router->dispatch($notFoundPath, 'GET');
+        $this->router->dispatch($notFoundPath, 'GET');
         $this->assertEquals(404, http_response_code());
     }
-    }
+}

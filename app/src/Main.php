@@ -17,6 +17,7 @@ class Main
     public Router $router;
     private ArticleCreateHandler $articleCreateHandler;
     private PDO $pdo;
+
     public function __construct()
     {
         $this->router = new Router();
@@ -24,18 +25,18 @@ class Main
         $this->pdo = Database::getConnection($config);
         $this->articleCreateHandler = new ArticleCreateHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
     }
-    public function  run():void
+
+    public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->router->add('POST', '/article',function (
-        ){
+        $this->router->add('POST', '/article', function () {
             try {
                 $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], (int)$_POST['user_id']);
                 $this->articleCreateHandler->execute($req);
                 http_response_code(201);
-            }
-            catch (Exception $e){
+                return;
+            } catch (Exception $e) {
                 throw  new Exception($e->getMessage());
             }
         });
