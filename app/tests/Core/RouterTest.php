@@ -3,11 +3,6 @@
 namespace Core;
 
 use App\Core\Router;
-use App\Handler\ArticleCreateHandler;
-use App\MockUseCase\CreateArticleMockUseCase;
-use App\Repository\CreateArticleRepository;
-use App\Request\CreateArticleRequest;
-use App\UseCase\ICreateArticleUseCase;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
@@ -28,6 +23,16 @@ class RouterTest extends TestCase
 
         $this->router->dispatch($path, 'GET');
         $this->assertEquals(201, http_response_code());
+    }
+
+    public function testDifferentHTTPMethod404()
+    {
+        $reqMethod = 'POST';
+        $path = '/';
+        $this->router->add('GET', $path, function () {
+        });
+        $this->router->dispatch($path, $reqMethod);
+        $this->assertEquals(404, http_response_code());
     }
 
     public function testDispatch404()
