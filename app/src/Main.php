@@ -6,9 +6,11 @@ namespace App;
 use App\Core\Database;
 use App\Core\Router;
 use App\Handler\ArticleCreateHandler;
+use App\Handler\UserCreateHandler;
 use App\Repository\CreateArticleRepository;
-use App\Request\CreateArticleRequest;
+use App\Repository\CreateUserRepository;
 use App\UseCase\CreateArticleUseCase;
+use App\UseCase\User\CreateUserUseCase;
 use Exception;
 use PDO;
 
@@ -16,6 +18,7 @@ class Main
 {
     public Router $router;
     private ArticleCreateHandler $articleCreateHandler;
+    private UserCreateHandler $userCreateHandler;
     private PDO $pdo;
 
     public function __construct()
@@ -24,27 +27,25 @@ class Main
         $config = require 'Config.php';
         $this->pdo = Database::getConnection($config);
         $this->articleCreateHandler = new ArticleCreateHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
+        $this->userCreateHandler = new UserCreateHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
     }
 
     public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->router->add('POST', '/article', function () {
-            try {
-                $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], (int)$_POST['user_id']);
-                $this->articleCreateHandler->execute($req);
-                http_response_code(201);
-                return;
-            } catch (Exception $e) {
-                throw  new Exception($e->getMessage());
-            }
+        $this->router->add('POST', '/api/articles', function () {
+            $this->articleCreateHandler->execute();
+        });
+
+        $this->router->add('POST', '/api/users', function () {
+            $this->userCreateHandler->execute();
         });
         try {
             $this->router->dispatch($requestUri, $requestMethod);
         } catch (Exception $e) {
+            echo $e->getMessage();
             http_response_code(500);
-            echo 'Internal Server Error';
         }
     }
 }
