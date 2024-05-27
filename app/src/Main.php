@@ -46,7 +46,6 @@ class Main
         } catch (Exception $e) {
             echo $e->getMessage();
             http_response_code(500);
-            echo 'Internal Server Error';
         }
     }
 }

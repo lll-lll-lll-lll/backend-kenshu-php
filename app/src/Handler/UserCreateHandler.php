@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Request\CreateUserRequest;
-use App\UseCase\User\ICreateUserUseCase;
+use App\UseCase\CreateArticleUseCase;
+use App\UseCase\User\CreateUserUseCase;
 use Exception;
 
 class UserCreateHandler
 {
-    private ICreateUserUseCase $createUserUseCase;
+    private CreateUserUseCase $createUserUseCase;
 
-    public function __construct(ICreateUserUseCase $createUserUseCase)
+    public function __construct(CreateUserUseCase $createUserUseCase)
     {
         $this->createUserUseCase = $createUserUseCase;
     }

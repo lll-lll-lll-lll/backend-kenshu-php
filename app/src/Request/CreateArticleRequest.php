@@ -40,7 +40,7 @@ class CreateArticleRequest
         if (empty($contents)) {
             throw new InvalidArgumentException('Contents is empty');
         }
-        if (mb_strlen($contents) >= $this->maxContentsLength) {
+        if (mb_strlen($contents, 'UTF-8') >= $this->maxContentsLength) {
             throw new InvalidArgumentException('Contents is too long');
         }
     }
