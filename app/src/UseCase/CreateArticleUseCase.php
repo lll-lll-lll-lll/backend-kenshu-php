@@ -8,10 +8,11 @@ use Exception;
 use PDO;
 use PDOException;
 
-class CreateArticleUseCase implements ICreateArticleUseCase
+class CreateArticleUseCase
 {
     private PDO $pdo;
     private CreateArticleRepository $createRepository;
+
     public function __construct(PDO $pdo, CreateArticleRepository $createRepository)
     {
         $this->pdo = $pdo;

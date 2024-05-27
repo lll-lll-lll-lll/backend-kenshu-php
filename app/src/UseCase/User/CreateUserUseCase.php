@@ -10,9 +10,7 @@ use Exception;
 use PDO;
 use PDOException;
 
-class
-
-CreateUserUseCase implements ICreateUserUseCase
+class CreateUserUseCase
 {
     private PDO $pdo;
     private UserPassword $userPassword;
