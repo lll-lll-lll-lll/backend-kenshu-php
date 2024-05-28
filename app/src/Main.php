@@ -7,12 +7,15 @@ use App\Core\Database;
 use App\Core\Router;
 use App\Handler\CreateArticleHandler;
 use App\Handler\CreateUserHandler;
+use App\Handler\GetArticleHandler;
 use App\Handler\GetArticleListHandler;
 use App\Repository\CreateArticleRepository;
 use App\Repository\CreateUserRepository;
 use App\Repository\GetArticleListRepository;
+use App\Repository\GetArticleRepository;
 use App\UseCase\CreateArticleUseCase;
 use App\UseCase\GetArticleListUseCase;
+use App\UseCase\GetArticleUseCase;
 use App\UseCase\User\CreateUserUseCase;
 use Exception;
 use PDO;
@@ -21,6 +24,7 @@ class Main
 {
     public Router $router;
     private CreateArticleHandler $articleCreateHandler;
+    private GetArticleHandler $articleHandler;
     private GetArticleListHandler $articleListHandler;
     private CreateUserHandler $userCreateHandler;
     private PDO $pdo;
@@ -31,6 +35,7 @@ class Main
         $config = require 'Config.php';
         $this->pdo = Database::getConnection($config);
         $this->articleCreateHandler = new CreateArticleHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
+        $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
         $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
     }
@@ -44,6 +49,9 @@ class Main
         });
         $this->router->add('POST', '/api/articles', function () {
             $this->articleCreateHandler->execute();
+        });
+        $this->router->add('GET', '/articles/{id}', function (int $id) {
+            echo $this->articleHandler->execute($id);
         });
 
         $this->router->add('POST', '/api/users', function () {
