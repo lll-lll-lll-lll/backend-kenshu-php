@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\UseCase;
 
+use App\Model\Article;
 use App\Repository\GetArticleListRepository;
 use PDO;
 
@@ -17,8 +18,16 @@ class GetArticleListUseCase
         $this->getArticleListRepository = $getArticleListRepository;
     }
 
+    /**
+     * @return Article[]
+     */
     public function execute(): array
     {
-        return $this->getArticleListRepository->execute($this->pdo);
+        $result = $this->getArticleListRepository->execute($this->pdo);
+        $res = [];
+        foreach ($result as $article) {
+            $res[] = new Article($article['article_id'], $article['title'], $article['contents'], $article['created_at'], $article['user_id']);
+        }
+        return $res;
     }
 }
