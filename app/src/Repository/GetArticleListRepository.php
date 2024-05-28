@@ -19,15 +19,9 @@ class GetArticleListRepository
             a.title, 
             a.contents, 
             a.created_at, 
-            a.user_id, 
-            ai.id AS image_id, 
-            ai.url
+            a.user_id
         FROM 
             article a 
-        LEFT JOIN 
-            article_image ai 
-        ON 
-            a.id = ai.article_id 
         ORDER BY 
             a.created_at DESC 
         LIMIT 10
