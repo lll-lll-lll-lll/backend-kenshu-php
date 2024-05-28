@@ -19,25 +19,12 @@ class GetArticleListHandler
 
     public function render(): string
     {
-        $result = $this->getArticleListUseCase->execute();
-        $html = $this->renderHeader();
-        $html .= '<h1>記事一覧</h1>';
-        foreach ($result as $article) {
-            $html .= $this->renderArticle($article);
+        $articles = $this->getArticleListUseCase->execute();
+        $articlesHTML = '';
+        foreach ($articles as $article) {
+            $articlesHTML .= $this->renderArticle($article);
         }
-        $html .= $this->renderFooter();
-        return $html;
-    }
-
-    private function renderHeader(): string
-    {
-        return '<!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>記事一覧</title>
-                </head>
-                <body>';
+        return $this->renderContent($articlesHTML);
     }
 
     private function renderArticle(Article $article): string
@@ -59,8 +46,17 @@ class GetArticleListHandler
             '<p>' . $formattedDate . '</p>';
     }
 
-    private function renderFooter(): string
+    private function renderContent(string $content): string
     {
-        return '</body></html>';
+        return "<!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <title>記事一覧</title>
+                </head>
+                <body>
+                    <h1>記事一覧</h1>
+                    {$content}
+                </body></html>";
     }
 }
