@@ -5,11 +5,14 @@ namespace App;
 
 use App\Core\Database;
 use App\Core\Router;
-use App\Handler\ArticleCreateHandler;
-use App\Handler\UserCreateHandler;
+use App\Handler\CreateArticleHandler;
+use App\Handler\CreateUserHandler;
+use App\Handler\GetArticleListHandler;
 use App\Repository\CreateArticleRepository;
 use App\Repository\CreateUserRepository;
+use App\Repository\GetArticleListRepository;
 use App\UseCase\CreateArticleUseCase;
+use App\UseCase\GetArticleListUseCase;
 use App\UseCase\User\CreateUserUseCase;
 use Exception;
 use PDO;
@@ -17,8 +20,9 @@ use PDO;
 class Main
 {
     public Router $router;
-    private ArticleCreateHandler $articleCreateHandler;
-    private UserCreateHandler $userCreateHandler;
+    private CreateArticleHandler $articleCreateHandler;
+    private GetArticleListHandler $articleListHandler;
+    private CreateUserHandler $userCreateHandler;
     private PDO $pdo;
 
     public function __construct()
@@ -26,14 +30,18 @@ class Main
         $this->router = new Router();
         $config = require 'Config.php';
         $this->pdo = Database::getConnection($config);
-        $this->articleCreateHandler = new ArticleCreateHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
-        $this->userCreateHandler = new UserCreateHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
+        $this->articleCreateHandler = new CreateArticleHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
+        $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
+        $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
     }
 
     public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
+        $this->router->add('GET', '/articles', function () {
+            echo $this->articleListHandler->render();
+        });
         $this->router->add('POST', '/api/articles', function () {
             $this->articleCreateHandler->execute();
         });

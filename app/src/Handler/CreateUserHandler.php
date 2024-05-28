@@ -4,11 +4,10 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Request\CreateUserRequest;
-use App\UseCase\CreateArticleUseCase;
 use App\UseCase\User\CreateUserUseCase;
 use Exception;
 
-class UserCreateHandler
+class CreateUserHandler
 {
     private CreateUserUseCase $createUserUseCase;
 
@@ -24,7 +23,7 @@ class UserCreateHandler
             $this->createUserUseCase->execute($req);
             http_response_code(201);
         } catch (Exception $e) {
-            error_log('UserCreateHandler/' . $e->getMessage());
+            error_log('CreateUserHandler/' . $e->getMessage());
             throw new Exception($e->getMessage());
         }
     }
