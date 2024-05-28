@@ -23,11 +23,6 @@ class GetArticleListUseCase
      */
     public function execute(): array
     {
-        $result = $this->getArticleListRepository->execute($this->pdo);
-        $res = [];
-        foreach ($result as $article) {
-            $res[] = new Article($article['article_id'], $article['title'], $article['contents'], $article['created_at'], $article['user_id']);
-        }
-        return $res;
+        return $this->getArticleListRepository->execute($this->pdo);
     }
 }
