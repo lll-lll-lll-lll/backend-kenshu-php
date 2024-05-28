@@ -55,4 +55,16 @@ class RouterTest extends TestCase
         $output = ob_get_clean();
         $this->assertEquals('1', $output);
     }
+
+    public function testInvalidPathParameter()
+    {
+        $path = '/articles/${id}';
+        $this->router->add('GET', $path, function (int $id) {
+            echo $id;
+        });
+        ob_start();
+        $this->router->dispatch('/articles/abc', 'GET');
+        $output = ob_get_clean();
+        $this->assertEquals('Not Found', $output);
+    }
 }
