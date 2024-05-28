@@ -7,7 +7,7 @@ use App\Request\CreateArticleRequest;
 use App\UseCase\CreateArticleUseCase;
 use Exception;
 
-class ArticleCreateHandler
+class CreateArticleHandler
 {
     public CreateArticleUseCase $articleCreateUseCase;
 

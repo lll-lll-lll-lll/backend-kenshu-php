@@ -5,9 +5,9 @@ namespace App;
 
 use App\Core\Database;
 use App\Core\Router;
-use App\Handler\ArticleCreateHandler;
+use App\Handler\CreateArticleHandler;
+use App\Handler\CreateUserHandler;
 use App\Handler\GetArticleListHandler;
-use App\Handler\UserCreateHandler;
 use App\Repository\CreateArticleRepository;
 use App\Repository\CreateUserRepository;
 use App\Repository\GetArticleListRepository;
@@ -20,9 +20,9 @@ use PDO;
 class Main
 {
     public Router $router;
-    private ArticleCreateHandler $articleCreateHandler;
+    private CreateArticleHandler $articleCreateHandler;
     private GetArticleListHandler $articleListHandler;
-    private UserCreateHandler $userCreateHandler;
+    private CreateUserHandler $userCreateHandler;
     private PDO $pdo;
 
     public function __construct()
@@ -30,9 +30,9 @@ class Main
         $this->router = new Router();
         $config = require 'Config.php';
         $this->pdo = Database::getConnection($config);
-        $this->articleCreateHandler = new ArticleCreateHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
+        $this->articleCreateHandler = new CreateArticleHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
-        $this->userCreateHandler = new UserCreateHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
+        $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
     }
 
     public function run(): void
