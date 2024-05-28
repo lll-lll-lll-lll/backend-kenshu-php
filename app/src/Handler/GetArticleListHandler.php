@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Model\Article;
 use App\UseCase\GetArticleListUseCase;
 use DateTime;
 use Exception;
@@ -39,7 +40,7 @@ class GetArticleListHandler
                 <body>';
     }
 
-    private function renderArticle($article): string
+    private function renderArticle(Article $article): string
     {
         $title = htmlspecialchars($article->title, ENT_QUOTES, 'UTF-8');
         $contents = htmlspecialchars($article->contents, ENT_QUOTES, 'UTF-8');

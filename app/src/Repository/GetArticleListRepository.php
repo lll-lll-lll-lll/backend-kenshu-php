@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Model\Article;
 use PDO;
 
 class GetArticleListRepository
@@ -15,22 +16,22 @@ class GetArticleListRepository
     {
         $stmt = $pdo->prepare('
         SELECT 
-            a.id AS article_id, 
-            a.title, 
-            a.contents, 
-            a.created_at, 
-            a.user_id
+            id, 
+            title, 
+            contents, 
+            created_at, 
+            user_id
         FROM 
-            article a 
+            article
         ORDER BY 
-            a.created_at DESC 
+            created_at DESC 
         LIMIT 10
     ');
         $stmt->execute();
-        $result = $stmt->fetchAll();
-        if (!$result) {
-            return [];
+        $articles = [];
+        while ($article = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $articles[] = new Article($article['id'], $article['title'], $article['contents'], $article['created_at'], $article['user_id']);
         }
-        return $result;
+        return $articles;
     }
 }
