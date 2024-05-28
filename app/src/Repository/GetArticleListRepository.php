@@ -12,6 +12,9 @@ class GetArticleListRepository
     {
     }
 
+    /**
+     * @return Article[]
+     */
     public function execute(PDO $pdo): array
     {
         $stmt = $pdo->prepare('
