@@ -1,6 +1,7 @@
 {
   "name": "vendor/app",
   "description": "kenshu package",
+  "license": "MIT",
     "require": {
       "ext-pdo": "*",
       "ext-mbstring": "*"
