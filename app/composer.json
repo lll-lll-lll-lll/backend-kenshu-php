@@ -1,4 +1,6 @@
 {
+  "name": "vendor/app",
+  "description": "kenshu package",
     "require": {
       "ext-pdo": "*",
       "ext-mbstring": "*"
