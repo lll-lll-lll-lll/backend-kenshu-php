@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-
+# phpunitのバージョンが11.1.3で8.2以上が必要でPHPのバージョンをサービスと同じ8.3にしたいのでubuntu-24.04を指定
     runs-on: ubuntu-24.04
 
     defaults:
