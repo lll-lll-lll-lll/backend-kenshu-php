@@ -53,7 +53,7 @@ class RouterTest extends TestCase
         ob_start();
         $this->router->dispatch('/articles/1', 'GET');
         $output = ob_get_clean();
-        $this->assertEquals(1, $output);
+        $this->assertSame('1', $output);
     }
 
     public function testInvalidPathParameter()
