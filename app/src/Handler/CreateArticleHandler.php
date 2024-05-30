@@ -28,9 +28,27 @@ class CreateArticleHandler
             );
             $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
-            echo $e->getMessage();
-            error_log($e->getMessage());
             http_response_code(500);
+            echo $this->renderFailedAlert();
         }
     }
+
+    private function renderFailedAlert(): string
+    {
+        return "
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'><title></title>
+                </head>
+                <body>
+                    <script>
+                        alert('失敗しました');
+                        window.location.href = '/articles';
+                    </script>
+                </body>
+                </html>
+            ";
+    }
+
 }

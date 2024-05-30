@@ -42,6 +42,7 @@ class Main
 
     public function run(): void
     {
+        session_start();
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->router->add('GET', '/articles', function () {
