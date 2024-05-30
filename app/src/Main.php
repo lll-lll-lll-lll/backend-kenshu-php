@@ -47,8 +47,9 @@ class Main
         $this->router->add('GET', '/articles', function () {
             echo $this->articleListHandler->render();
         });
-        $this->router->add('POST', '/api/articles', function () {
+        $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
+            header('Location: /articles');
         });
         $this->router->add('GET', '/articles/{id}', function (int $id) {
             echo $this->articleHandler->execute($id);
