@@ -7,32 +7,29 @@ use InvalidArgumentException;
 
 class CreateArticleRequest
 {
-    // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
-    private int $maxContentsLength = 3000;
     public string $title;
     public string $contents;
+    public string $thumbnail_image_url;
     public int $user_id;
+    // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
+    private int $maxContentsLength = 3000;
+    private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
-    public function __construct(string $title, string $contents, string $user_id)
+
+    public function __construct(string $title, string $contents, string $thumbnail_image_url, int $user_id)
     {
-        $this->validateUserId($user_id);
-        $this->validateContents($contents);
+        if ($user_id <= 0) {
+            throw new InvalidArgumentException('User id is required');
+        }
         if (empty($title)) {
             throw new InvalidArgumentException('Title is empty, Contents is empty, or User id is not an integer');
         }
+        $this->validateContents($contents);
+        $thumbnail_image_url = $this->validateImgUrl($thumbnail_image_url);
         $this->title = $title;
         $this->contents = $contents;
-        $this->user_id = (int)$user_id;
-    }
-
-    private function validateUserId(string $user_id): void
-    {
-        if (filter_var($user_id, FILTER_VALIDATE_INT) === false) {
-            throw new InvalidArgumentException("Invalid user_id: must be an integer.");
-        }
-        if ($user_id < 0) {
-            throw new InvalidArgumentException('User id is required');
-        }
+        $this->thumbnail_image_url = $thumbnail_image_url;
+        $this->user_id = $user_id;
     }
 
     private function validateContents(string $contents): void
@@ -43,5 +40,17 @@ class CreateArticleRequest
         if (mb_strlen($contents, 'UTF-8') >= $this->maxContentsLength) {
             throw new InvalidArgumentException('Contents is too long');
         }
+    }
+
+    private function validateImgUrl(string $filePath): string
+    {
+        if (!filter_var($filePath, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('Invalid URL');
+        }
+        $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
+        if (!in_array(strtolower($fileExtension), $this->allowedExtensions)) {
+            throw new InvalidArgumentException('Invalid file extension: ' . $fileExtension);
+        }
+        return $filePath;
     }
 }
