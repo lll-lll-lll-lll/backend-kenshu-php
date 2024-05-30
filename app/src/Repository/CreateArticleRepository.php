@@ -5,7 +5,6 @@ namespace App\Repository;
 
 use Exception;
 use PDO;
-use PDOException;
 
 class CreateArticleRepository
 {
@@ -26,7 +25,7 @@ class CreateArticleRepository
             $articleId = $pdo->lastInsertId();
             return (int)$articleId;
         } catch (Exception $e) {
-            throw new PDOException($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }
