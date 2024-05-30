@@ -18,16 +18,18 @@ class CreateArticleHandler
 
     public function execute(): void
     {
-        $user_id = $_SESSION['user_id'] ?? 0;
+        $user_id = $_SESSION['user_id'] ?? 1;
         try {
             $req = new CreateArticleRequest(
                 $_POST['title'] ?? '',
                 $_POST['contents'] ?? '',
                 $_POST['thumbnail_image_url'] ?? '',
-                $user_id
+                $user_id,
+                $_POST['tag_name'] ?? ''
             );
             $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
+            echo $e->getMessage();
             http_response_code(500);
             echo $this->renderFailedAlert();
         }
@@ -43,8 +45,8 @@ class CreateArticleHandler
                 </head>
                 <body>
                     <script>
-                        alert('失敗しました');
-                        window.location.href = '/articles';
+//                        alert('失敗しました');
+//                        window.location.href = '/articles';
                     </script>
                 </body>
                 </html>

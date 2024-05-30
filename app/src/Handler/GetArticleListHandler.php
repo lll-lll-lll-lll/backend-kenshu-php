@@ -40,6 +40,9 @@ class GetArticleListHandler
             
             <label for='image_url'>サムネイル画像のURLを入力してください</label><br>
             <input type='text' name='thumbnail_image_url' id='thumbnail_image_url'><br>
+            
+            <label for='tag_name'>tag名</label><br>
+            <input type='text' id='tag_name' name='tag_name' required><br>
             <input type='submit' value='送信'>
         </form>";
     }

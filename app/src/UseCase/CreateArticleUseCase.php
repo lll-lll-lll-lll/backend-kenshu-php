@@ -26,7 +26,9 @@ class CreateArticleUseCase
     {
         try {
             $this->pdo->beginTransaction();
-            $lastInsertedID = $this->createRepository->execute($this->pdo, $req->title, $req->contents, $req->user_id);
+            $lastInsertedID = $this->createRepository->execute($this->pdo,
+                $req->title, $req->contents, $req->user_id,
+                $req->thumbnail_image_url, $req->tag_name);
             if ($lastInsertedID === 0) {
                 throw new Exception('Failed to create article');
             }
