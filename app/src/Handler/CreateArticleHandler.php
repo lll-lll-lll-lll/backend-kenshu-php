@@ -16,15 +16,21 @@ class CreateArticleHandler
         $this->articleCreateUseCase = $articleCreateUseCase;
     }
 
-    public function execute(): int
+    public function execute(): void
     {
+        $user_id = $_SESSION['user_id'] ?? 0;
         try {
-            $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], $_POST['user_id']);
-            $lastInsertedId = $this->articleCreateUseCase->execute($req);
-            http_response_code(201);
-            return $lastInsertedId;
+            $req = new CreateArticleRequest(
+                $_POST['title'] ?? '',
+                $_POST['contents'] ?? '',
+                $_POST['thumbnail_image_url'] ?? '',
+                $user_id
+            );
+            $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
-            throw  new Exception($e->getMessage());
+            echo $e->getMessage();
+            error_log($e->getMessage());
+            http_response_code(500);
         }
     }
 }
