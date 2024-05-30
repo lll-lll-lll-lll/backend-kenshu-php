@@ -5,6 +5,7 @@ namespace App\UseCase;
 
 use App\Model\Article;
 use App\Repository\GetArticleRepository;
+use Exception;
 use PDO;
 
 class GetArticleUseCase
@@ -18,8 +19,15 @@ class GetArticleUseCase
         $this->getArticleRepository = $getArticleRepository;
     }
 
+    /**
+     * @throws Exception
+     */
     public function execute(int $articleId): Article
     {
-        return $this->getArticleRepository->execute($this->pdo, $articleId);
+        try {
+            return $this->getArticleRepository->execute($this->pdo, $articleId);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }

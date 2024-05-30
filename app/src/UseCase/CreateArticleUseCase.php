@@ -5,10 +5,8 @@ namespace App\UseCase;
 
 use App\Repository\CreateArticleRepository;
 use App\Request\CreateArticleRequest;
-use App\Request\CreateUserRequest;
 use Exception;
 use PDO;
-use PDOException;
 
 class CreateArticleUseCase
 {
@@ -21,16 +19,21 @@ class CreateArticleUseCase
         $this->createRepository = $createRepository;
     }
 
-    public function execute(CreateArticleRequest $req): int
+    /**
+     * @throws Exception
+     */
+    public function execute(CreateArticleRequest $req): void
     {
         try {
             $this->pdo->beginTransaction();
             $lastInsertedID = $this->createRepository->execute($this->pdo, $req->title, $req->contents, $req->user_id);
+            if ($lastInsertedID === 0) {
+                throw new Exception('Failed to create article');
+            }
             $this->pdo->commit();
-            return $lastInsertedID;
         } catch (Exception $e) {
             $this->pdo->rollBack();
-            throw new PDOException($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }
