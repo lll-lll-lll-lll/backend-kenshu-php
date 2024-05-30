@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "article_image" (
 
 CREATE TABLE IF NOT EXISTS "tag" (
   id serial PRIMARY KEY,
-  name varchar(255) NOT NULL,
+  name varchar(255) UNIQUE NOT NULL,
   created_at timestamp default CURRENT_TIMESTAMP
 );
 
@@ -53,8 +53,6 @@ CREATE TRIGGER trigger_update_updated_at_column
 BEFORE UPDATE ON "user"
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
-
-
 
 
 -- サンプルデータの挿入
