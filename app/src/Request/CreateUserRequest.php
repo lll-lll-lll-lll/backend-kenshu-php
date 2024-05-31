@@ -32,13 +32,6 @@ class CreateUserRequest
         $this->password = $password;
     }
 
-    private function validateProfileUrl(string $profile_url): void
-    {
-        if (!empty($profile_url) && !filter_var($profile_url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException('無効なプロフィールURLです');
-        }
-    }
-
     private function validateEmail(string $email): void
     {
         if (empty($email)) {
