@@ -41,8 +41,13 @@ class GetArticleListHandler
             <label for='image_url'>サムネイル画像のURLを入力してください</label><br>
             <input type='text' name='thumbnail_image_url' id='thumbnail_image_url'><br>
             
-            <label for='tag_name'>tag名</label><br>
-            <input type='text' id='tag_name' name='tag_name' required><br>
+           <label for='tags'>タグを選択してください</label><br>
+            <select id='tags' name='tags[]' multiple>
+                <option value='1'>タグ1</option>
+                <option value='key1'>タグ2</option>
+                <option value='key2'>タグ3</option>
+                <option value='key3'>タグ4</option>
+            </select><br>
             <input type='submit' value='送信'>
         </form>";
     }
