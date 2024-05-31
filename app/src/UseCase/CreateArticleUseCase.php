@@ -20,11 +20,11 @@ class CreateArticleUseCase
     private GetTagRepository $getTagRepository;
 
     public function __construct(
-        PDO                          $pdo,
-        CreateArticleRepository      $createRepository,
-        CreateArticleTagRepository   $createArticleTagRepository,
+        PDO $pdo,
+        CreateArticleRepository $createRepository,
+        CreateArticleTagRepository $createArticleTagRepository,
         CreateArticleImageRepository $createArticleImageRepository,
-        GetTagRepository             $getTagRepository)
+        GetTagRepository $getTagRepository)
     {
         $this->pdo = $pdo;
         $this->createArticleRepository = $createRepository;
