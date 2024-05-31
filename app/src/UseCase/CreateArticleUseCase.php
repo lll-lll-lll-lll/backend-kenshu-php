@@ -26,11 +26,13 @@ class CreateArticleUseCase
     {
         try {
             $this->pdo->beginTransaction();
-            $lastInsertedID = $this->createRepository->execute($this->pdo,
-                $req->title, $req->contents, $req->user_id,
-                $req->thumbnail_image_url, $req->tag_name);
-            if ($lastInsertedID === 0) {
-                throw new Exception('Failed to create article');
+            try {
+                $articleId = $this->createRepository->executeInsertArticle($this->pdo, $req->title, $req->contents, $req->user_id);
+                $this->createRepository->executeInsertArticleImage($this->pdo, $req->thumbnail_image_url, $articleId);
+                $tagId = $this->createRepository->executeInsertTag($this->pdo, $req->tag_name);
+                $this->createRepository->executeInsertArticleTag($this->pdo, $articleId, $tagId);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
             }
             $this->pdo->commit();
         } catch (Exception $e) {
