@@ -14,7 +14,7 @@ class CreateUserRequest
 
     public string $password;
 
-    public function __construct(string $user_name, string $mail, string $password, string $profile_url = '')
+    public function __construct()
     {
         $user_name = $_POST['user_name'];
         $mail = $_POST['email'];
@@ -66,6 +66,13 @@ class CreateUserRequest
         }
         if (strlen($user_name) > 255) {
             throw new InvalidArgumentException('User name is too long');
+        }
+    }
+
+    private function validateProfileUrl(string $profile_url): void
+    {
+        if (!empty($profile_url) && !filter_var($profile_url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('無効なプロフィールURLです');
         }
     }
 }
