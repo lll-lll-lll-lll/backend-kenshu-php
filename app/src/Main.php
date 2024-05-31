@@ -9,17 +9,21 @@ use App\Handler\CreateArticleHandler;
 use App\Handler\CreateUserHandler;
 use App\Handler\GetArticleHandler;
 use App\Handler\GetArticleListHandler;
+use App\Handler\GetTagListHandler;
 use App\Repository\CreateArticleImageRepository;
 use App\Repository\CreateArticleRepository;
 use App\Repository\CreateArticleTagRepository;
 use App\Repository\CreateUserRepository;
 use App\Repository\GetArticleListRepository;
 use App\Repository\GetArticleRepository;
+use App\Repository\GetTagListRepository;
 use App\Repository\GetTagRepository;
 use App\UseCase\CreateArticleUseCase;
 use App\UseCase\GetArticleListUseCase;
 use App\UseCase\GetArticleUseCase;
+use App\UseCase\GetTagListUseCase;
 use App\UseCase\User\CreateUserUseCase;
+use App\View\ArticleListView;
 use Exception;
 use PDO;
 
@@ -30,6 +34,8 @@ class Main
     private GetArticleHandler $articleHandler;
     private GetArticleListHandler $articleListHandler;
     private CreateUserHandler $userCreateHandler;
+    private GetTagListHandler $tagListHandler;
+    private ArticleListView $articleListView;
     private PDO $pdo;
 
     public function __construct()
@@ -48,6 +54,8 @@ class Main
         $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
         $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
+        $this->tagListHandler = new GetTagListHandler($this->pdo, new GetTagListUseCase($this->pdo, new GetTagListRepository()));
+        $this->articleListView = new ArticleListView($this->articleListHandler, $this->tagListHandler);
     }
 
     public function run(): void
@@ -56,7 +64,7 @@ class Main
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->router->add('GET', '/articles', function () {
-            echo $this->articleListHandler->render();
+            echo $this->articleListView->render();
         });
         $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
