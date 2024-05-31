@@ -16,11 +16,14 @@ class CreateArticleRequest
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
-    /**
-     * @param array<string> $tags
-     */
-    public function __construct(string $title, string $contents, string $thumbnail_image_url, int $user_id, array $tags)
+    public function __construct()
     {
+        $user_id = $_SESSION['user_id'];
+        $title = $_POST['title'];
+        $contents = $_POST['contents'];
+        $thumbnail_image_url = $_POST['thumbnail_image_url'];
+        $tags = $_POST['tags'];
+
         if (empty($tags)) {
             throw new InvalidArgumentException('Tags is required');
         }
@@ -28,7 +31,7 @@ class CreateArticleRequest
             throw new InvalidArgumentException('Tag id is required');
         }
         $tag_id = (int)$tags[0];
-        if ($user_id <= 0) {
+        if (!is_numeric($user_id)) {
             throw new InvalidArgumentException('User id is required');
         }
         if (empty($title)) {

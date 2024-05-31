@@ -18,16 +18,8 @@ class CreateArticleHandler
 
     public function execute(): void
     {
-        $user_id = $_SESSION['user_id'] ?? 1;
         try {
-            $req = new CreateArticleRequest(
-                $_POST['title'] ?? '',
-                $_POST['contents'] ?? '',
-                $_POST['thumbnail_image_url'] ?? '',
-                $user_id,
-                $_POST['tags'] ?? []
-            );
-
+            $req = new CreateArticleRequest();
             $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
             echo $e->getMessage();
