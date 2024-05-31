@@ -25,10 +25,12 @@ class CreateArticleHandler
                 $_POST['contents'] ?? '',
                 $_POST['thumbnail_image_url'] ?? '',
                 $user_id,
-                $_POST['tag_name'] ?? ''
+                $_POST['tags'] ?? []
             );
+
             $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
+            echo $e->getMessage();
             http_response_code(500);
             echo $this->renderFailedAlert();
         }
@@ -44,8 +46,8 @@ class CreateArticleHandler
                 </head>
                 <body>
                     <script>
-//                        alert('失敗しました');
-//                        window.location.href = '/articles';
+                        alert('失敗しました');
+                        window.location.href = '/articles';
                     </script>
                 </body>
                 </html>
