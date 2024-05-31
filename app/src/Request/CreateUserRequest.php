@@ -16,6 +16,11 @@ class CreateUserRequest
 
     public function __construct(string $user_name, string $mail, string $password, string $profile_url = '')
     {
+        $user_name = $_POST['user_name'];
+        $mail = $_POST['email'];
+        $password = $_POST['password'];
+        $profile_url = $_POST['profile_url'];
+
         $this->validateEmail($mail);
         $this->validatePassword($password);
         $this->validateUserName($user_name);
