@@ -7,6 +7,7 @@ use PDO;
 
 class CreateArticleTagRepository
 {
+    //TODO　複数のタグをインサートできるようにする。
     public function execute(PDO $pdo, int $article_id, int $tag_id): void
     {
         $sql = '
