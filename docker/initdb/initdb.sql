@@ -54,6 +54,18 @@ BEFORE UPDATE ON "user"
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
+INSERT INTO "tag" (name) VALUES ('総合');
+INSERT INTO "tag" (name) VALUES ('テクノロジー');
+INSERT INTO "tag" (name) VALUES ('モバイル');
+INSERT INTO "tag" (name) VALUES ('アプリ');
+INSERT INTO "tag" (name) VALUES ('エンタメ');
+INSERT INTO "tag" (name) VALUES ('ビューティー');
+INSERT INTO "tag" (name) VALUES ('ファッション');
+INSERT INTO "tag" (name) VALUES ('ライフスタイル');
+INSERT INTO "tag" (name) VALUES ('ビジネス');
+INSERT INTO "tag" (name) VALUES ('グルメ');
+INSERT INTO "tag" (name) VALUES ('スポーツ');
+
 
 -- サンプルデータの挿入
 -- user テーブルにサンプルデータを挿入（必要に応じて）
