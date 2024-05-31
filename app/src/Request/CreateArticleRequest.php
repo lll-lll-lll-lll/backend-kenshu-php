@@ -11,30 +11,37 @@ class CreateArticleRequest
     public string $contents;
     public string $thumbnail_image_url;
     public int $user_id;
-    public string $tag_name;
+    public int $tag_id;
     // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
-
-    public function __construct(string $title, string $contents, string $thumbnail_image_url, int $user_id, string $tag_name)
+    /**
+     * @param array<string> $tags
+     */
+    public function __construct(string $title, string $contents, string $thumbnail_image_url, int $user_id, array $tags)
     {
+        if (empty($tags)) {
+            throw new InvalidArgumentException('Tags is required');
+        }
+        if (!is_numeric($tags[0])) {
+            throw new InvalidArgumentException('Tag id is required');
+        }
+        $tag_id = (int)$tags[0];
         if ($user_id <= 0) {
             throw new InvalidArgumentException('User id is required');
         }
         if (empty($title)) {
             throw new InvalidArgumentException('Title is empty');
         }
-        if (empty($tag_name)) {
-            throw new InvalidArgumentException('Tag name is empty');
-        }
+
         $this->validateContents($contents);
         $thumbnail_image_url = $this->validateImgUrl($thumbnail_image_url);
         $this->title = $title;
         $this->contents = $contents;
         $this->thumbnail_image_url = $thumbnail_image_url;
         $this->user_id = $user_id;
-        $this->tag_name = $tag_name;
+        $this->tag_id = $tag_id;
     }
 
     private function validateContents(string $contents): void
