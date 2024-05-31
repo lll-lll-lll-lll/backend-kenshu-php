@@ -27,6 +27,7 @@ class GetArticleListHandler
         return $this->renderContent($articlesHTML);
     }
 
+    // TODO タグを複数選択できるようにする
     private function renderForm(): string
     {
         return "<form enctype='multipart/form-data' action='/articles' method='POST'>
