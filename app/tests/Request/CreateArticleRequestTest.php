@@ -14,9 +14,9 @@ class CreateArticleRequestTest extends TestCase
         $contents = 'contents';
         $thumbnail_image_url = 'https://example.com/image.jpg';
         $user_id = 1;
-        $tag_name = 'tag';
+        $tags = ['1', '2'];
 
-        $request = new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tag_name);
+        $request = new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tags);
 
         $this->assertSame($title, $request->title);
         $this->assertSame($contents, $request->contents);
@@ -33,9 +33,9 @@ class CreateArticleRequestTest extends TestCase
         $contents = 'contents';
         $thumbnail_image_url = 'invalid_url';
         $user_id = 1;
-        $tag_name = 'tag';
+        $tags = ['1', '2'];
 
-        new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tag_name);
+        new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tags);
     }
 
     public function testNotValidExtension(): void
@@ -47,8 +47,8 @@ class CreateArticleRequestTest extends TestCase
         $contents = 'contents';
         $thumbnail_image_url = 'https://example.com/image.pdf';
         $user_id = 1;
-        $tag_name = 'tag';
+        $tags = ['1', '2'];
 
-        new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tag_name);
+        new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tags);
     }
 }
