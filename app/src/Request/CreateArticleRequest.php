@@ -23,7 +23,7 @@ class CreateArticleRequest
             throw new InvalidArgumentException('User id is required');
         }
         if (empty($title)) {
-            throw new InvalidArgumentException('Title is empty, Contents is empty, or User id is not an integer');
+            throw new InvalidArgumentException('Title is empty');
         }
         if (empty($tag_name)) {
             throw new InvalidArgumentException('Tag name is empty');
