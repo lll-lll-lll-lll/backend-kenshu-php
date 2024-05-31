@@ -29,7 +29,6 @@ class CreateArticleHandler
             );
             $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
-            echo $e->getMessage();
             http_response_code(500);
             echo $this->renderFailedAlert();
         }
