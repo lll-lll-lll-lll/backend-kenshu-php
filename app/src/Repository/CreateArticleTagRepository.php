@@ -25,7 +25,6 @@ class CreateArticleTagRepository
         }
 
         $sql .= implode(", ", $values);
-        echo $sql;
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
     }
