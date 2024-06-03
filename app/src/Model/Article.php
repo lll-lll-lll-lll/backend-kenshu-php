@@ -9,7 +9,6 @@ class Article
     public int $id;
     public string $title;
     public string $contents;
-
     public string $created_at;
     public int $user_id;
 

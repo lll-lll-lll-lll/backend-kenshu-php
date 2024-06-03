@@ -7,39 +7,37 @@ use InvalidArgumentException;
 
 class CreateUserRequest
 {
-    public string $userName;
+    public string $user_name;
     public string $mail;
     // プロフィール画像は任意なので空文字で初期化
     public string $profile_url;
 
     public string $password;
 
-    /**
-     * @param array<string, string> $body
-     */
-    public function __construct(array $body)
+    public function __construct()
     {
-        $userName = $body['user_name'];
-        $mail = $body['mail'];
-        $profileUrl = $body['profile_url'];
-        $password = $body['password'];
+        $user_name = $_POST['user_name'];
+        $mail = $_POST['email'];
+        $password = $_POST['password'];
+        $profile_url = $_POST['profile_url'];
+
         $this->validateEmail($mail);
         $this->validatePassword($password);
-        $this->validateUserName($userName);
-        $this->validateProfileUrl($profileUrl);
+        $this->validateUserName($user_name);
+        $this->validateProfileUrl($profile_url);
 
-        $this->profile_url = $profileUrl;
-        $this->userName = $userName;
+        $this->profile_url = $profile_url;
+        $this->user_name = $user_name;
         $this->mail = $mail;
         $this->password = $password;
     }
 
-    private function validateEmail(string $mail): void
+    private function validateEmail(string $email): void
     {
-        if (empty($mail)) {
+        if (empty($email)) {
             throw new InvalidArgumentException('Email is not empty');
         }
-        if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Invalid email');
         }
     }
@@ -54,12 +52,12 @@ class CreateUserRequest
         }
     }
 
-    private function validateUserName(string $userName): void
+    private function validateUserName(string $user_name): void
     {
-        if (empty($userName)) {
+        if (empty($user_name)) {
             throw new InvalidArgumentException('User name is not empty');
         }
-        if (strlen($userName) > 255) {
+        if (strlen($user_name) > 255) {
             throw new InvalidArgumentException('User name is too long');
         }
     }

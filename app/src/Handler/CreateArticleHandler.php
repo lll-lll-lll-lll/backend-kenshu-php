@@ -16,15 +16,34 @@ class CreateArticleHandler
         $this->articleCreateUseCase = $articleCreateUseCase;
     }
 
-    public function execute(): int
+    public function execute(): void
     {
         try {
-            $req = new CreateArticleRequest($_POST['title'], $_POST['contents'], $_POST['user_id']);
-            $lastInsertedId = $this->articleCreateUseCase->execute($req);
-            http_response_code(201);
-            return $lastInsertedId;
+            $req = new CreateArticleRequest($_POST, $_SESSION);
+            $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
-            throw  new Exception($e->getMessage());
+            echo $e->getMessage();
+            http_response_code(500);
+            echo $this->renderFailedAlert();
         }
     }
+
+    private function renderFailedAlert(): string
+    {
+        return "
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'><title></title>
+                </head>
+                <body>
+                    <script>
+                        alert('失敗しました');
+                        window.location.href = '/articles';
+                    </script>
+                </body>
+                </html>
+            ";
+    }
+
 }

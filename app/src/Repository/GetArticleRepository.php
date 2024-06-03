@@ -6,10 +6,12 @@ namespace App\Repository;
 use App\Model\Article;
 use Exception;
 use PDO;
-use PDOException;
 
 class GetArticleRepository
 {
+    /**
+     * @throws Exception
+     */
     public function execute(PDO $pdo, int $id): Article
     {
         try {
@@ -21,8 +23,8 @@ class GetArticleRepository
                 throw new Exception("Article with ID $id not found.");
             }
             return new Article($result['id'], $result['title'], $result['contents'], $result['created_at'], $result['user_id']);
-        } catch (PDOException $e) {
-            throw new PDOException($e->getMessage(), (int)$e->getCode());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 }

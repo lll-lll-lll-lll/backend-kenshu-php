@@ -19,7 +19,7 @@ class CreateUserHandler
     public function execute(): void
     {
         try {
-            $req = new CreateUserRequest($_POST);
+            $req = new CreateUserRequest();
             $this->createUserUseCase->execute($req);
             http_response_code(201);
         } catch (Exception $e) {

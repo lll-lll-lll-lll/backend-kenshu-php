@@ -9,10 +9,13 @@ use App\Handler\CreateArticleHandler;
 use App\Handler\CreateUserHandler;
 use App\Handler\GetArticleHandler;
 use App\Handler\GetArticleListHandler;
+use App\Repository\CreateArticleImageRepository;
 use App\Repository\CreateArticleRepository;
+use App\Repository\CreateArticleTagRepository;
 use App\Repository\CreateUserRepository;
 use App\Repository\GetArticleListRepository;
 use App\Repository\GetArticleRepository;
+use App\Repository\GetTagRepository;
 use App\UseCase\CreateArticleUseCase;
 use App\UseCase\GetArticleListUseCase;
 use App\UseCase\GetArticleUseCase;
@@ -34,7 +37,14 @@ class Main
         $this->router = new Router();
         $config = require 'Config.php';
         $this->pdo = Database::getConnection($config);
-        $this->articleCreateHandler = new CreateArticleHandler(new CreateArticleUseCase($this->pdo, new CreateArticleRepository()));
+        $this->articleCreateHandler = new CreateArticleHandler(
+            new CreateArticleUseCase(
+                $this->pdo,
+                new CreateArticleRepository(),
+                new CreateArticleTagRepository(),
+                new CreateArticleImageRepository(),
+                new GetTagRepository())
+        );
         $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
         $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
@@ -42,13 +52,15 @@ class Main
 
     public function run(): void
     {
+        session_start();
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->router->add('GET', '/articles', function () {
             echo $this->articleListHandler->render();
         });
-        $this->router->add('POST', '/api/articles', function () {
+        $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
+            header('Location: /articles');
         });
         $this->router->add('GET', '/articles/{id}', function (int $id) {
             echo $this->articleHandler->execute($id);
