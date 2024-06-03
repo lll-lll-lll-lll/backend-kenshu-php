@@ -7,39 +7,39 @@ use InvalidArgumentException;
 
 class CreateUserRequest
 {
-    public string $user_name;
+    public string $userName;
     public string $mail;
     // プロフィール画像は任意なので空文字で初期化
     public string $profile_url;
 
     public string $password;
 
-    public function __construct(string $user_name, string $mail, string $password, string $profile_url = '')
+    /**
+     * @param array<string, string> $body
+     */
+    public function __construct(array $body)
     {
+        $userName = $body['user_name'];
+        $mail = $body['mail'];
+        $profileUrl = $body['profile_url'];
+        $password = $body['password'];
         $this->validateEmail($mail);
         $this->validatePassword($password);
-        $this->validateUserName($user_name);
-        $this->validateProfileUrl($profile_url);
+        $this->validateUserName($userName);
+        $this->validateProfileUrl($profileUrl);
 
-        $this->profile_url = $profile_url;
-        $this->user_name = $user_name;
+        $this->profile_url = $profileUrl;
+        $this->userName = $userName;
         $this->mail = $mail;
         $this->password = $password;
     }
 
-    private function validateProfileUrl(string $profile_url): void
+    private function validateEmail(string $mail): void
     {
-        if (!empty($profile_url) && !filter_var($profile_url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException('無効なプロフィールURLです');
-        }
-    }
-
-    private function validateEmail(string $email): void
-    {
-        if (empty($email)) {
+        if (empty($mail)) {
             throw new InvalidArgumentException('Email is not empty');
         }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Invalid email');
         }
     }
@@ -54,13 +54,20 @@ class CreateUserRequest
         }
     }
 
-    private function validateUserName(string $user_name): void
+    private function validateUserName(string $userName): void
     {
-        if (empty($user_name)) {
+        if (empty($userName)) {
             throw new InvalidArgumentException('User name is not empty');
         }
-        if (strlen($user_name) > 255) {
+        if (strlen($userName) > 255) {
             throw new InvalidArgumentException('User name is too long');
+        }
+    }
+
+    private function validateProfileUrl(string $profile_url): void
+    {
+        if (!empty($profile_url) && !filter_var($profile_url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('無効なプロフィールURLです');
         }
     }
 }

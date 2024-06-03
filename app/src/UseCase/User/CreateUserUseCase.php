@@ -28,7 +28,7 @@ class CreateUserUseCase
         $this->pdo->beginTransaction();
         try {
             $this->userPassword = new UserPassword($req->password);
-            $this->createUserRepository->execute($this->pdo, $req->user_name, $req->mail, $this->userPassword->getHashPassword(), $req->profile_url);
+            $this->createUserRepository->execute($this->pdo, $req->userName, $req->mail, $this->userPassword->getHashPassword(), $req->profile_url);
             $this->pdo->commit();
         } catch (Exception $e) {
             $this->pdo->rollBack();
