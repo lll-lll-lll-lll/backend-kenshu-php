@@ -21,9 +21,7 @@ class CreateUserHandler
         try {
             $req = new CreateUserRequest($_POST);
             $this->createUserUseCase->execute($req);
-            http_response_code(201);
         } catch (Exception $e) {
-            error_log('CreateUserHandler/' . $e->getMessage());
             throw new Exception($e->getMessage());
         }
     }
