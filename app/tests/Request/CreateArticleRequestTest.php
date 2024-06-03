@@ -10,17 +10,20 @@ class CreateArticleRequestTest extends TestCase
 {
     public function testCreateArticleRequest(): void
     {
-        $title = 'title';
-        $contents = 'contents';
-        $thumbnail_image_url = 'https://example.com/image.jpg';
         $user_id = 1;
-        $tags = ['1', '2'];
+        $dollPost = [
+            'title' => 'title',
+            'contents' => 'contents',
+            'thumbnail_image_url' => 'https://example.com/image.jpg',
+            'tags' => ['1', '2'],
+        ];
+        $dollSession = ['user_id' => $user_id];
 
-        $request = new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tags);
+        $request = new CreateArticleRequest($dollPost, $dollSession);
 
-        $this->assertSame($title, $request->title);
-        $this->assertSame($contents, $request->contents);
-        $this->assertSame($thumbnail_image_url, $request->thumbnail_image_url);
+        $this->assertSame($dollPost['title'], $request->title);
+        $this->assertSame($dollPost['contents'], $request->contents);
+        $this->assertSame($dollPost['thumbnail_image_url'], $request->thumbnail_image_url);
         $this->assertSame($user_id, $request->user_id);
     }
 
@@ -28,14 +31,15 @@ class CreateArticleRequestTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid URL');
-
-        $title = 'title';
-        $contents = 'contents';
-        $thumbnail_image_url = 'invalid_url';
         $user_id = 1;
-        $tags = ['1', '2'];
-
-        new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tags);
+        $dollPost = [
+            'title' => 'title',
+            'contents' => 'contents',
+            'thumbnail_image_url' => 'invalid_url',
+            'tags' => ['1', '2'],
+        ];
+        $dollSession = ['user_id' => $user_id];
+        new CreateArticleRequest($dollPost, $dollSession);
     }
 
     public function testNotValidExtension(): void
@@ -43,12 +47,15 @@ class CreateArticleRequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid file extension: pdf');
 
-        $title = 'title';
-        $contents = 'contents';
-        $thumbnail_image_url = 'https://example.com/image.pdf';
         $user_id = 1;
-        $tags = ['1', '2'];
+        $dollPost = [
+            'title' => 'title',
+            'contents' => 'contents',
+            'thumbnail_image_url' => 'https://example.com/image.pdf',
+            'tags' => ['1', '2'],
+        ];
+        $dollSession = ['user_id' => $user_id];
 
-        new CreateArticleRequest($title, $contents, $thumbnail_image_url, $user_id, $tags);
+        new CreateArticleRequest($dollPost, $dollSession);
     }
 }

@@ -19,7 +19,7 @@ class CreateArticleHandler
     public function execute(): void
     {
         try {
-            $req = new CreateArticleRequest();
+            $req = new CreateArticleRequest($_POST, $_SESSION);
             $this->articleCreateUseCase->execute($req);
         } catch (Exception $e) {
             echo $e->getMessage();

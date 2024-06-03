@@ -16,13 +16,13 @@ class CreateArticleRequest
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
-    public function __construct()
+    public function __construct(array $dollPost, array $dollSession)
     {
-        $user_id = $_SESSION['user_id'];
-        $title = $_POST['title'];
-        $contents = $_POST['contents'];
-        $thumbnail_image_url = $_POST['thumbnail_image_url'];
-        $tags = $_POST['tags'];
+        $user_id = $dollSession['user_id'];
+        $title = $dollPost['title'];
+        $contents = $dollPost['contents'];
+        $thumbnail_image_url = $dollPost['thumbnail_image_url'];
+        $tags = $dollPost['tags'];
 
         if (empty($tags)) {
             throw new InvalidArgumentException('Tags is required');
