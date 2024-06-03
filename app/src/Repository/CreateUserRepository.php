@@ -9,7 +9,7 @@ use PDOException;
 
 class CreateUserRepository
 {
-    public function execute(PDO $pdo, string $user_name, string $mail, string $password_hash, string $profile_url): int
+    public function execute(PDO $pdo, string $user_name, string $mail, string $password_hash, string $profile_url): void
     {
         try {
             $sql = 'INSERT INTO "user" (name, mail, password, profile_url) VALUES (:name, :mail, :password,:profile_url)';
@@ -20,8 +20,6 @@ class CreateUserRepository
                 ':password' => $password_hash,
                 ':profile_url' => $profile_url
             ]);
-            $lastInsertedId = $pdo->lastInsertId();
-            return (int)$lastInsertedId;
         } catch (Exception $e) {
             throw new PDOException($e->getMessage());
         }
