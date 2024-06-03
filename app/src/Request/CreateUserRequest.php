@@ -7,38 +7,51 @@ use InvalidArgumentException;
 
 class CreateUserRequest
 {
-    public string $user_name;
+    public string $userName;
     public string $mail;
-    // プロフィール画像は任意なので空文字で初期化
-    public string $profile_url;
+    public string $profileUrl;
 
     public string $password;
 
-    public function __construct()
+    public function __construct(array $dollPost)
     {
-        $user_name = $_POST['user_name'];
-        $mail = $_POST['email'];
-        $password = $_POST['password'];
-        $profile_url = $_POST['profile_url'];
+        $userMame = $dollPost['user_name'];
+        $mail = $dollPost['mail'];
+        $password = $dollPost['password'];
+        $profile_url = $dollPost['profile_url'];
+        $checkedProfileUrl = $this->setProfileUrl($profile_url);
 
         $this->validateEmail($mail);
         $this->validatePassword($password);
-        $this->validateUserName($user_name);
-        $this->validateProfileUrl($profile_url);
+        $this->validateUserName($userMame);
+        $this->validateProfileUrl($checkedProfileUrl);
 
-        $this->profile_url = $profile_url;
-        $this->user_name = $user_name;
+        $this->profileUrl = $checkedProfileUrl;
+        $this->userName = $userMame;
         $this->mail = $mail;
         $this->password = $password;
+    }
+
+    /**
+     * プロフィールURLは任意なので、空文字の場合は空文字を返す
+     * @param string $profileUrl
+     * @return string
+     */
+    private function setProfileUrl(string $profileUrl): string
+    {
+        if (!empty($profileUrl)) {
+            return $profileUrl;
+        }
+        return '';
     }
 
     private function validateEmail(string $email): void
     {
         if (empty($email)) {
-            throw new InvalidArgumentException('Email is not empty');
+            throw new InvalidArgumentException('mail is not empty');
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('Invalid email');
+            throw new InvalidArgumentException('Invalid mail');
         }
     }
 
@@ -52,20 +65,20 @@ class CreateUserRequest
         }
     }
 
-    private function validateUserName(string $user_name): void
+    private function validateUserName(string $userName): void
     {
-        if (empty($user_name)) {
+        if (empty($userName)) {
             throw new InvalidArgumentException('User name is not empty');
         }
-        if (strlen($user_name) > 255) {
+        if (strlen($userName) > 255) {
             throw new InvalidArgumentException('User name is too long');
         }
     }
 
-    private function validateProfileUrl(string $profile_url): void
+    private function validateProfileUrl(string $profileUrl): void
     {
-        if (!empty($profile_url) && !filter_var($profile_url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException('無効なプロフィールURLです');
+        if (!empty($profileUrl) && !filter_var($profileUrl, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('Invalid URL for profile image');
         }
     }
 }
