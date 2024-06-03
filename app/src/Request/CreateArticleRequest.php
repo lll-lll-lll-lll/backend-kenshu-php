@@ -11,7 +11,7 @@ class CreateArticleRequest
     public string $contents;
     public string $thumbnailImageUrl;
     public int $userId;
-    public int $tagId;
+    public array $tags;
     // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
@@ -27,10 +27,6 @@ class CreateArticleRequest
         if (empty($tags)) {
             throw new InvalidArgumentException('Tags is required');
         }
-        if (!is_numeric($tags[0])) {
-            throw new InvalidArgumentException('Tag id is required');
-        }
-        $tag_id = (int)$tags[0];
         if (!isset($userId)) {
             throw new InvalidArgumentException('User id is required');
         }
@@ -47,7 +43,7 @@ class CreateArticleRequest
         $this->contents = $contents;
         $this->thumbnailImageUrl = $thumbnailImageUrl;
         $this->userId = (int)$userId;
-        $this->tagId = $tag_id;
+        $this->$tags = $tags;
     }
 
     private function validateContents(string $contents): void
