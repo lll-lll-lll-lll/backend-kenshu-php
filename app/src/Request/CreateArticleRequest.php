@@ -18,7 +18,7 @@ class CreateArticleRequest
 
     public function __construct(array $dollPost, array $dollSession)
     {
-        $userId = $dollSession['user_id'] ?? 1;
+        $userId = $dollSession['user_id'];
         $title = $dollPost['title'];
         $contents = $dollPost['contents'];
         $thumbnailImageUrl = $dollPost['thumbnail_image_url'];
