@@ -17,7 +17,6 @@ use App\Repository\CreateUserRepository;
 use App\Repository\GetArticleListRepository;
 use App\Repository\GetArticleRepository;
 use App\Repository\GetTagListRepository;
-use App\Repository\GetTagRepository;
 use App\UseCase\CreateArticleUseCase;
 use App\UseCase\GetArticleListUseCase;
 use App\UseCase\GetArticleUseCase;
@@ -48,8 +47,7 @@ class Main
                 $this->pdo,
                 new CreateArticleRepository(),
                 new CreateArticleTagRepository(),
-                new CreateArticleImageRepository(),
-                new GetTagRepository())
+                new CreateArticleImageRepository())
         );
         $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
