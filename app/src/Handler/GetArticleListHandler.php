@@ -20,11 +20,37 @@ class GetArticleListHandler
     public function render(): string
     {
         $articles = $this->getArticleListUseCase->execute();
-        $articlesHTML = '';
+        $articlesHTML = $this->renderForm();
         foreach ($articles as $article) {
             $articlesHTML .= $this->renderArticle($article);
         }
         return $this->renderContent($articlesHTML);
+    }
+
+    // TODO タグを複数選択できるようにする
+    private function renderForm(): string
+    {
+        return "<form enctype='multipart/form-data' action='/articles' method='POST'>
+            <input type='hidden' name='MAX_FILE_SIZE' value='30000' required/>
+            
+            <label for='title'>タイトルを入力してください:</label><br>
+            <input type='text' id='title' name='title' required><br>
+            
+            <label for='contents'>コンテンツを入力してください:</label><br>
+            <textarea id='contents' name='contents' rows='4' cols='50' required></textarea><br>
+            
+            <label for='image_url'>サムネイル画像のURLを入力してください</label><br>
+            <input type='text' name='thumbnail_image_url' id='thumbnail_image_url'><br>
+            
+           <label for='tags'>タグを選択してください</label><br>
+            <select id='tags' name='tags[]' multiple>
+                <option value='1'>タグ1</option>
+                <option value='key1'>タグ2</option>
+                <option value='key2'>タグ3</option>
+                <option value='key3'>タグ4</option>
+            </select><br>
+            <input type='submit' value='送信'>
+        </form>";
     }
 
     private function renderArticle(Article $article): string

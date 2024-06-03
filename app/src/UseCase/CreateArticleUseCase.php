@@ -3,34 +3,56 @@ declare(strict_types=1);
 
 namespace App\UseCase;
 
+use App\Repository\CreateArticleImageRepository;
 use App\Repository\CreateArticleRepository;
+use App\Repository\CreateArticleTagRepository;
+use App\Repository\GetTagRepository;
 use App\Request\CreateArticleRequest;
-use App\Request\CreateUserRequest;
 use Exception;
 use PDO;
-use PDOException;
 
 class CreateArticleUseCase
 {
     private PDO $pdo;
-    private CreateArticleRepository $createRepository;
+    private CreateArticleRepository $createArticleRepository;
+    private CreateArticleTagRepository $createArticleTagRepository;
+    private CreateArticleImageRepository $createArticleImageRepository;
+    private GetTagRepository $getTagRepository;
 
-    public function __construct(PDO $pdo, CreateArticleRepository $createRepository)
+    public function __construct(
+        PDO $pdo,
+        CreateArticleRepository $createRepository,
+        CreateArticleTagRepository $createArticleTagRepository,
+        CreateArticleImageRepository $createArticleImageRepository,
+        GetTagRepository $getTagRepository)
     {
         $this->pdo = $pdo;
-        $this->createRepository = $createRepository;
+        $this->createArticleRepository = $createRepository;
+        $this->createArticleTagRepository = $createArticleTagRepository;
+        $this->createArticleImageRepository = $createArticleImageRepository;
+        $this->getTagRepository = $getTagRepository;
     }
 
-    public function execute(CreateArticleRequest $req): int
+    /**
+     * @throws Exception
+     */
+    public function execute(CreateArticleRequest $req): void
     {
         try {
             $this->pdo->beginTransaction();
-            $lastInsertedID = $this->createRepository->execute($this->pdo, $req->title, $req->contents, $req->user_id);
+            try {
+                $articleId = $this->createArticleRepository->execute($this->pdo, $req->title, $req->contents, $req->userId);
+                $this->createArticleImageRepository->execute($this->pdo, $req->thumbnailImageUrl, $articleId);
+                $tag_id = $this->getTagRepository->execute($this->pdo, $req->tagId);
+                $this->createArticleTagRepository->execute($this->pdo, $articleId, $tag_id);
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage());
+            }
             $this->pdo->commit();
-            return $lastInsertedID;
         } catch (Exception $e) {
+            echo $e->getMessage();
             $this->pdo->rollBack();
-            throw new PDOException($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }

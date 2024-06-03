@@ -1,5 +1,5 @@
 <!-- phpunit.xml -->
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true"  cacheResult="false">
     <testsuites>
         <testsuite name="kenshu-php-unit-test">
             <directory>./tests</directory>

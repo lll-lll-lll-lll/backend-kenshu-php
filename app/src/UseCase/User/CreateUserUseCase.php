@@ -13,7 +13,6 @@ use PDOException;
 class CreateUserUseCase
 {
     private PDO $pdo;
-    private UserPassword $userPassword;
 
     private CreateUserRepository $createUserRepository;
 
@@ -27,8 +26,8 @@ class CreateUserUseCase
     {
         $this->pdo->beginTransaction();
         try {
-            $this->userPassword = new UserPassword($req->password);
-            $this->createUserRepository->execute($this->pdo, $req->user_name, $req->mail, $this->userPassword->getHashPassword(), $req->profile_url);
+            $userPassword = new UserPassword($req->password);
+            $this->createUserRepository->execute($this->pdo, $req->user_name, $req->mail, $userPassword->getHashPassword(), $req->profile_url);
             $this->pdo->commit();
         } catch (Exception $e) {
             $this->pdo->rollBack();

@@ -1,4 +1,7 @@
 {
+  "name": "vendor/app",
+  "description": "kenshu package",
+  "license": "MIT",
     "require": {
       "ext-pdo": "*",
       "ext-mbstring": "*"
@@ -10,5 +13,8 @@
       "psr-4": {
           "App\\": "src/"
       }
+  },
+  "scripts": {
+        "test": "vendor/bin/phpunit --configuration phpunit.xml"
   }
   }
