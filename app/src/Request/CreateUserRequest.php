@@ -15,7 +15,7 @@ class CreateUserRequest
 
     public function __construct(array $dollPost)
     {
-        $userMame = $dollPost['user_name'];
+        $userName = $dollPost['user_name'];
         $mail = $dollPost['mail'];
         $password = $dollPost['password'];
         $profile_url = $dollPost['profile_url'];
@@ -23,11 +23,11 @@ class CreateUserRequest
 
         $this->validateEmail($mail);
         $this->validatePassword($password);
-        $this->validateUserName($userMame);
+        $this->validateUserName($userName);
         $this->validateProfileUrl($checkedProfileUrl);
 
         $this->profileUrl = $checkedProfileUrl;
-        $this->userName = $userMame;
+        $this->userName = $userName;
         $this->mail = $mail;
         $this->password = $password;
     }
