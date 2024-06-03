@@ -79,6 +79,7 @@ class Main
         });
         $this->router->add('POST', '/api/users', function () {
             $this->userCreateHandler->execute();
+            header('Location: /articles');
         });
         try {
             $this->router->dispatch($requestUri, $requestMethod);
