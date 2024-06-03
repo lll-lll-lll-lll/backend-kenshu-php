@@ -5,19 +5,30 @@ namespace App\Repository;
 
 use PDO;
 
+/**
+ * Class CreateArticleTagRepository
+ * 記事のタグを複数紐付けるリポジトリ
+ */
 class CreateArticleTagRepository
 {
-    //TODO　複数のタグをインサートできるようにする。
-    public function execute(PDO $pdo, int $article_id, int $tag_id): void
+    /**
+     * @param PDO $pdo
+     * @param int $article_id
+     * @param array<int> $tags
+     */
+    public function execute(PDO $pdo, int $article_id, array $tags): void
     {
         $sql = '
             INSERT INTO "article_tag" (article_id, tag_id)
-            VALUES (:article_id, :tag_id)
-        ';
+            VALUES (:article_id, :tag_id)';
+
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':article_id' => $article_id,
-            ':tag_id' => $tag_id,
-        ]);
+
+        foreach ($tags as $tagId) {
+            $stmt->execute([
+                ':article_id' => $article_id,
+                ':tag_id' => $tagId,
+            ]);
+        }
     }
 }
