@@ -23,6 +23,7 @@ use App\UseCase\GetArticleUseCase;
 use App\UseCase\GetTagListUseCase;
 use App\UseCase\User\CreateUserUseCase;
 use App\View\ArticleListView;
+use App\View\RegisterUserView;
 use Exception;
 use PDO;
 
@@ -35,6 +36,7 @@ class Main
     private CreateUserHandler $userCreateHandler;
     private GetTagListHandler $tagListHandler;
     private ArticleListView $articleListView;
+    private RegisterUserView $registerUserView;
     private PDO $pdo;
 
     public function __construct()
@@ -54,6 +56,7 @@ class Main
         $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
         $this->tagListHandler = new GetTagListHandler($this->pdo, new GetTagListUseCase($this->pdo, new GetTagListRepository()));
         $this->articleListView = new ArticleListView($this->articleListHandler, $this->tagListHandler);
+        $this->registerUserView = new RegisterUserView();
     }
 
     public function run(): void
@@ -71,7 +74,9 @@ class Main
         $this->router->add('GET', '/articles/{id}', function (int $id) {
             echo $this->articleHandler->execute($id);
         });
-
+        $this->router->add('GET', '/register', function () {
+            echo $this->registerUserView->execute();
+        });
         $this->router->add('POST', '/api/users', function () {
             $this->userCreateHandler->execute();
         });
