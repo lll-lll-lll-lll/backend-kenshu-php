@@ -18,7 +18,7 @@ class CreateArticleRequest
 
     public function __construct(array $dollPost, array $dollSession)
     {
-        $userId = $dollSession['user_id'];
+        $userId = $dollSession['user_id'] ?? 1;
         $title = $dollPost['title'];
         $contents = $dollPost['contents'];
         $thumbnailImageUrl = $dollPost['thumbnail_image_url'];
@@ -43,7 +43,7 @@ class CreateArticleRequest
         $this->contents = $contents;
         $this->thumbnailImageUrl = $thumbnailImageUrl;
         $this->userId = (int)$userId;
-        $this->$tags = $tags;
+        $this->tags = $tags;
     }
 
     private function validateContents(string $contents): void
