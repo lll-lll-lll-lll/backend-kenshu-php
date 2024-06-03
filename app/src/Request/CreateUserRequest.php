@@ -18,8 +18,8 @@ class CreateUserRequest
         $userName = $dollPost['user_name'];
         $mail = $dollPost['mail'];
         $password = $dollPost['password'];
-        $profile_url = $dollPost['profile_url'];
-        $checkedProfileUrl = $this->setProfileUrl($profile_url);
+        $profileUrl = $dollPost['profile_url'];
+        $checkedProfileUrl = $this->setProfileUrl($profileUrl);
 
         $this->validateEmail($mail);
         $this->validatePassword($password);
@@ -45,12 +45,12 @@ class CreateUserRequest
         return '';
     }
 
-    private function validateEmail(string $email): void
+    private function validateEmail(string $mail): void
     {
-        if (empty($email)) {
-            throw new InvalidArgumentException('mail is not empty');
+        if (empty($mail)) {
+            throw new InvalidArgumentException('mail is empty');
         }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('Invalid mail');
         }
     }
