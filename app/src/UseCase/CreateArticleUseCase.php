@@ -41,9 +41,9 @@ class CreateArticleUseCase
         try {
             $this->pdo->beginTransaction();
             try {
-                $articleId = $this->createArticleRepository->execute($this->pdo, $req->title, $req->contents, $req->user_id);
-                $this->createArticleImageRepository->execute($this->pdo, $req->thumbnail_image_url, $articleId);
-                $tag_id = $this->getTagRepository->execute($this->pdo, $req->tag_id);
+                $articleId = $this->createArticleRepository->execute($this->pdo, $req->title, $req->contents, $req->userId);
+                $this->createArticleImageRepository->execute($this->pdo, $req->thumbnailImageUrl, $articleId);
+                $tag_id = $this->getTagRepository->execute($this->pdo, $req->tagId);
                 $this->createArticleTagRepository->execute($this->pdo, $articleId, $tag_id);
             } catch (Exception $e) {
                 throw new Exception($e->getMessage());

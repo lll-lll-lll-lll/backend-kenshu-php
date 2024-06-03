@@ -23,8 +23,8 @@ class CreateArticleRequestTest extends TestCase
 
         $this->assertSame($dollPost['title'], $request->title);
         $this->assertSame($dollPost['contents'], $request->contents);
-        $this->assertSame($dollPost['thumbnail_image_url'], $request->thumbnail_image_url);
-        $this->assertSame($user_id, $request->user_id);
+        $this->assertSame($dollPost['thumbnail_image_url'], $request->thumbnailImageUrl);
+        $this->assertSame($user_id, $request->userId);
     }
 
     public function testCreateInvalidUrl(): void

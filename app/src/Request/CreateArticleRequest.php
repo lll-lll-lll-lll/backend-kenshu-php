@@ -9,19 +9,19 @@ class CreateArticleRequest
 {
     public string $title;
     public string $contents;
-    public string $thumbnail_image_url;
-    public int $user_id;
-    public int $tag_id;
+    public string $thumbnailImageUrl;
+    public int $userId;
+    public int $tagId;
     // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
     public function __construct(array $dollPost, array $dollSession)
     {
-        $user_id = $dollSession['user_id'];
+        $userId = $dollSession['user_id'];
         $title = $dollPost['title'];
         $contents = $dollPost['contents'];
-        $thumbnail_image_url = $dollPost['thumbnail_image_url'];
+        $thumbnailImageUrl = $dollPost['thumbnail_image_url'];
         $tags = $dollPost['tags'];
 
         if (empty($tags)) {
@@ -31,7 +31,10 @@ class CreateArticleRequest
             throw new InvalidArgumentException('Tag id is required');
         }
         $tag_id = (int)$tags[0];
-        if (!is_numeric($user_id)) {
+        if (!isset($userId)) {
+            throw new InvalidArgumentException('User id is required');
+        }
+        if (!is_numeric($userId)) {
             throw new InvalidArgumentException('User id is required');
         }
         if (empty($title)) {
@@ -39,12 +42,12 @@ class CreateArticleRequest
         }
 
         $this->validateContents($contents);
-        $thumbnail_image_url = $this->validateImgUrl($thumbnail_image_url);
+        $thumbnailImageUrl = $this->validateImgUrl($thumbnailImageUrl);
         $this->title = $title;
         $this->contents = $contents;
-        $this->thumbnail_image_url = $thumbnail_image_url;
-        $this->user_id = (int)$user_id;
-        $this->tag_id = $tag_id;
+        $this->thumbnailImageUrl = $thumbnailImageUrl;
+        $this->userId = (int)$userId;
+        $this->tagId = $tag_id;
     }
 
     private function validateContents(string $contents): void
