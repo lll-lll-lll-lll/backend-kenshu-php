@@ -14,12 +14,12 @@ class CreateUserRequest
 
     public string $password;
 
-    public function __construct()
+    public function __construct(array $dollPost)
     {
-        $user_name = $_POST['user_name'];
-        $mail = $_POST['email'];
-        $password = $_POST['password'];
-        $profile_url = $_POST['profile_url'];
+        $user_name = $dollPost['user_name'];
+        $mail = $dollPost['email'];
+        $password = $dollPost['password'];
+        $profile_url = $dollPost['profile_url'];
 
         $this->validateEmail($mail);
         $this->validatePassword($password);
