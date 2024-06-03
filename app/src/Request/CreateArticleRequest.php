@@ -11,11 +11,17 @@ class CreateArticleRequest
     public string $contents;
     public string $thumbnailImageUrl;
     public int $userId;
-    public array $tags;
+    /** @var array<int> */
+    public array $tagIds;
     // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
+    /**
+     * tagsだけarray<int>型それ以外はstring
+     * @param array<string, string|array<int>> $dollPost
+     * @param array<string, string> $dollSession
+     */
     public function __construct(array $dollPost, array $dollSession)
     {
         $userId = $dollSession['user_id'];
@@ -43,7 +49,7 @@ class CreateArticleRequest
         $this->contents = $contents;
         $this->thumbnailImageUrl = $thumbnailImageUrl;
         $this->userId = (int)$userId;
-        $this->tags = $tags;
+        $this->tagIds = $tags;
     }
 
     private function validateContents(string $contents): void
