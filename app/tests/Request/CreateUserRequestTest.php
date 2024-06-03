@@ -12,12 +12,12 @@ class CreateUserRequestTest extends TestCase
     {
         $dollPost = [
             'user_name' => 'testName',
-            'email' => 'test@gmail.com',
+            'mail' => 'test@gmail.com',
             'password' => 'password',
             'profile_url' => 'https://example.com/image.jpg',];
         $request = new CreateUserRequest($dollPost);
         $this->assertSame($dollPost['user_name'], $request->userName);
-        $this->assertSame($dollPost['email'], $request->mail);
+        $this->assertSame($dollPost['mail'], $request->mail);
         $this->assertSame($dollPost['password'], $request->password);
         $this->assertSame($dollPost['profile_url'], $request->profileUrl);
     }
@@ -25,10 +25,10 @@ class CreateUserRequestTest extends TestCase
     public function testInvalidEmail(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid email');
+        $this->expectExceptionMessage('Invalid mail');
         $dollPost = [
             'user_name' => 'testName',
-            'email' => 'test',
+            'mail' => 'test',
             'password' => 'password',
             'profile_url' => 'https://example.com/image.jpg',];
         new CreateUserRequest($dollPost);
