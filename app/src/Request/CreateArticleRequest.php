@@ -43,7 +43,7 @@ class CreateArticleRequest
         $this->title = $title;
         $this->contents = $contents;
         $this->thumbnail_image_url = $thumbnail_image_url;
-        $this->user_id = $user_id;
+        $this->user_id = (int)$user_id;
         $this->tag_id = $tag_id;
     }
 
