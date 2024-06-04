@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\UseCase\User;
 
-use App\Model\UserPassword;
 use App\Repository\GetUserFromMail as GetUserFromMailRepository;
 use App\Request\LoginUserRequest;
 use Exception;
@@ -27,8 +26,7 @@ class LoginUserUseCase
     {
         try {
             $user = $this->getUserFromMail->execute($this->pdo, $req->mail);
-            $userPassword = new UserPassword($req->getRawPassword());
-            $this->checkPassword($userPassword, $user->getHashPassword());
+            $this->checkPassword($req->getRawPassword(), $user->getHashPassword());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -37,9 +35,9 @@ class LoginUserUseCase
     /**
      * @throws Exception
      */
-    private function checkPassword(UserPassword $userPassword, string $hashPassword): void
+    private function checkPassword(string $rawPassword, string $hashPassword): void
     {
-        if (!password_verify($userPassword->getRawPassword(), $hashPassword)) {
+        if (!password_verify($rawPassword, $hashPassword)) {
             throw new Exception('failed to validate password');
         }
     }
