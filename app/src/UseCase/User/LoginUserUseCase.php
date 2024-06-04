@@ -34,13 +34,12 @@ class LoginUserUseCase
     }
 
     /**
-     * @throws Exception rawPasswordが間違えている場合
+     * @throws Exception
      */
-    private function checkPassword(UserPassword $userPassword, string $hashPassword): bool
+    private function checkPassword(UserPassword $userPassword, string $hashPassword): void
     {
         if (!password_verify($userPassword->getRawPassword(), $hashPassword)) {
             throw new Exception('failed to validate password');
         }
-        return true;
     }
 }
