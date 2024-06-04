@@ -27,7 +27,8 @@ class LoginUserUseCase
     {
         try {
             $user = $this->getUserFromMail->execute($this->pdo, $req->mail);
-            $this->checkPassword($req->getUserPassword(), $user->getHashPassword());
+            $userPassword = new UserPassword($req->getRawPassword());
+            $this->checkPassword($userPassword, $user->getHashPassword());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

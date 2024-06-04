@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace App\Request;
 
-use App\Model\UserPassword;
 use InvalidArgumentException;
 
 class LoginUserRequest
 {
     public string $mail;
-    private UserPassword $userPassword;
+    private string $rawPassword;
 
     public function __construct(array $dollPost)
     {
@@ -18,7 +17,7 @@ class LoginUserRequest
         $this->validateEmail($mail);
 
         $this->mail = $mail;
-        $this->userPassword = new UserPassword($password);
+        $this->rawPassword = $password;
     }
 
     private function validateEmail(mixed $mail): void
@@ -34,8 +33,8 @@ class LoginUserRequest
     /**
      * ユーザのパスワードを管理しているインスタンスを返す
      */
-    public function getUserPassword(): UserPassword
+    public function getRawPassword(): string
     {
-        return $this->userPassword;
+        return $this->rawPassword;
     }
 }
