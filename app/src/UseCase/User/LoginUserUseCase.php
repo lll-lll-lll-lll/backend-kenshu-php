@@ -4,17 +4,17 @@ declare(strict_types=1);
 namespace App\UseCase\User;
 
 use App\Model\UserPassword;
-use App\Repository\GetUserFromMail;
+use App\Repository\GetUserFromMail as GetUserFromMailRepository;
 use App\Request\LoginUserRequest;
 use Exception;
 use PDO;
 
 class LoginUserUseCase
 {
-    public GetUserFromMail $getUserFromMail;
+    public GetUserFromMailRepository $getUserFromMail;
     private PDO $pdo;
 
-    public function __construct(PDO $pdo, GetUserFromMail $getUserFromMail)
+    public function __construct(PDO $pdo, GetUserFromMailRepository $getUserFromMail)
     {
         $this->pdo = $pdo;
         $this->getUserFromMail = $getUserFromMail;
