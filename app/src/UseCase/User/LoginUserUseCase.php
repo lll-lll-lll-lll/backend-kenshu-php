@@ -10,13 +10,13 @@ use PDO;
 
 class LoginUserUseCase
 {
-    public GetUserFromMailRepository $getUserFromMail;
+    public GetUserFromMailRepository $getUserFromMailRepository;
     private PDO $pdo;
 
-    public function __construct(PDO $pdo, GetUserFromMailRepository $getUserFromMail)
+    public function __construct(PDO $pdo, GetUserFromMailRepository $getUserFromMailRepository)
     {
         $this->pdo = $pdo;
-        $this->getUserFromMail = $getUserFromMail;
+        $this->getUserFromMailRepository = $getUserFromMailRepository;
     }
 
     /**
@@ -25,7 +25,7 @@ class LoginUserUseCase
     public function execute(LoginUserRequest $req): void
     {
         try {
-            $user = $this->getUserFromMail->execute($this->pdo, $req->mail);
+            $user = $this->getUserFromMailRepository->execute($this->pdo, $req->mail);
             $this->checkPassword($req->getRawPassword(), $user->getHashPassword());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
