@@ -27,7 +27,6 @@ class LoginUserHandler
             $this->loginUserUseCase->execute($req);
         } catch (Exception $e) {
             echo LoginView::FailedLogin();
-            throw new Exception($e->getMessage());
         }
     }
 }
