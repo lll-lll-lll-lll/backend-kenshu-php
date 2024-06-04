@@ -10,6 +10,7 @@ use App\Handler\CreateUserHandler;
 use App\Handler\GetArticleHandler;
 use App\Handler\GetArticleListHandler;
 use App\Handler\GetTagListHandler;
+use App\Handler\LoginUserHandler;
 use App\Repository\CreateArticleImageRepository;
 use App\Repository\CreateArticleRepository;
 use App\Repository\CreateArticleTagRepository;
@@ -17,12 +18,15 @@ use App\Repository\CreateUserRepository;
 use App\Repository\GetArticleListRepository;
 use App\Repository\GetArticleRepository;
 use App\Repository\GetTagListRepository;
+use App\Repository\GetUserFromMail;
 use App\UseCase\CreateArticleUseCase;
 use App\UseCase\GetArticleListUseCase;
 use App\UseCase\GetArticleUseCase;
 use App\UseCase\GetTagListUseCase;
 use App\UseCase\User\CreateUserUseCase;
+use App\UseCase\User\LoginUserUseCase;
 use App\View\ArticleListView;
+use App\View\LoginView;
 use App\View\RegisterUserView;
 use Exception;
 use PDO;
@@ -38,6 +42,8 @@ class Main
     private ArticleListView $articleListView;
     private RegisterUserView $registerUserView;
     private PDO $pdo;
+    private LoginView $loginView;
+    private LoginUserHandler $loginUserHandler;
 
     public function __construct()
     {
@@ -57,6 +63,8 @@ class Main
         $this->tagListHandler = new GetTagListHandler($this->pdo, new GetTagListUseCase($this->pdo, new GetTagListRepository()));
         $this->articleListView = new ArticleListView($this->articleListHandler, $this->tagListHandler);
         $this->registerUserView = new RegisterUserView();
+        $this->loginUserHandler = new LoginUserHandler(new LoginUserUseCase($this->pdo, new GetUserFromMail()));
+        $this->loginView = new LoginView();
     }
 
     public function run(): void
@@ -76,6 +84,13 @@ class Main
         });
         $this->router->add('GET', '/register', function () {
             echo $this->registerUserView->execute();
+        });
+        $this->router->add('GET', '/login', function () {
+            echo $this->loginView->execute();
+        });
+        $this->router->add('POST', '/api/login', function () {
+            $this->loginUserHandler->execute();
+            header('Location: /articles');
         });
         $this->router->add('POST', '/api/users', function () {
             $this->userCreateHandler->execute();

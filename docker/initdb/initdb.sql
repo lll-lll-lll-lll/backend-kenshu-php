@@ -54,6 +54,8 @@ BEFORE UPDATE ON "user"
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
+CREATE UNIQUE INDEX idx_user_mail ON "user" (mail);
+
 INSERT INTO "tag" (name) VALUES ('総合');
 INSERT INTO "tag" (name) VALUES ('テクノロジー');
 INSERT INTO "tag" (name) VALUES ('モバイル');

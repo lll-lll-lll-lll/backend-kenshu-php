@@ -21,9 +21,4 @@ class UserPassword
     {
         return $this->hashPassword;
     }
-
-    public function verifyPassword(string $password): bool
-    {
-        return password_verify($password, $this->hashPassword);
-    }
 }
