@@ -18,17 +18,6 @@ class Session
         session_start();
     }
 
-    // TODO Logout処理の時に使うつもり（仮
-
-    /**
-     * CSRF脆弱性の対策としてセッションIDと$_POSTに含まれるトークンを検証する。
-     * @param array<string, string|bool> $session
-     */
-    public static function checkTokenAndSessionId(string $token): bool
-    {
-        return hash_equals($token, session_id());
-    }
-
     public static function clean(): void
     {
         $_SESSION = array();
