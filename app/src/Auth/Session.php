@@ -39,6 +39,6 @@ class Session
 
     public static function isSessionExpired(): bool
     {
-        return $_SESSION[self::EXPIRES_KEY] > time();
+        return $_SESSION[self::EXPIRES_KEY] < time();
     }
 }
