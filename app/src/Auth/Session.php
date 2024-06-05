@@ -8,7 +8,7 @@ class Session
     // セッションの有効期限を設定. 7日間
     const int TIME_OUT = 7 * 24 * 60 * 60;
 
-    const string ID_KEY = 'session_id';
+    const string SESSION_ID_KEY = 'session_id';
     const string USER_ID_KEY = 'user_id';
     const string EXPIRES_KEY = 'expires';
     const string TIME_OUT_KEY = 'timeout';
@@ -17,6 +17,8 @@ class Session
     {
         session_start();
     }
+
+    // TODO Logout処理の時に使うつもり（仮
 
     /**
      * CSRF脆弱性の対策としてセッションIDと$_POSTに含まれるトークンを検証する。
