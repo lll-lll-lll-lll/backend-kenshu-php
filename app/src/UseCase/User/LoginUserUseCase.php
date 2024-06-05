@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\UseCase\User;
 
+use App\Auth\Cookie;
+use App\Auth\Session;
 use App\Repository\GetUserFromMail as GetUserFromMailRepository;
 use App\Request\LoginUserRequest;
 use Exception;
@@ -27,6 +29,8 @@ class LoginUserUseCase
         try {
             $user = $this->getUserFromMailRepository->execute($this->pdo, $req->mail);
             $this->checkPassword($req->getRawPassword(), $user->getHashPassword());
+            Session::setSession($user->id);
+            Cookie::setCookie(Session::ID_KEY, session_id());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
