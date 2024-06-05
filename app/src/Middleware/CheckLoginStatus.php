@@ -17,13 +17,13 @@ class CheckLoginStatus
      */
     public static function isLogin(array $session, array $cookie): bool
     {
-        if (is_null($session[Session::USER_ID_KEY])) {
+        if (!isset($session[Session::USER_ID_KEY])) {
             return false;
         }
         if ($cookie[Session::SESSION_ID_KEY] !== session_id()) {
             return false;
         }
-        if (!Session::isSessionExpired()) {
+        if (Session::isSessionExpired()) {
             Session::clean();
             return false;
         }
