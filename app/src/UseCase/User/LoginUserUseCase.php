@@ -29,6 +29,7 @@ class LoginUserUseCase
         try {
             $user = $this->getUserFromMailRepository->execute($this->pdo, $req->mail);
             $this->checkPassword($req->getRawPassword(), $user->getHashPassword());
+            Session::start();
             Session::setSession($user->id);
             Cookie::setCookie(Session::SESSION_ID_KEY, session_id());
         } catch (Exception $e) {
