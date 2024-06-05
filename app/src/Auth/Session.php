@@ -37,8 +37,16 @@ class Session
         $_SESSION[self::EXPIRES_KEY] = time() + self::TIME_OUT;
     }
 
+    /**
+     * セッションが有効期限切れかどうかを判定する
+     * @return bool 有効期限切れの場合true
+     */
     public static function isSessionExpired(): bool
     {
+        // セッションが存在しない場合は有効期限が切れているものとする。
+        if (!isset($_SESSION[self::EXPIRES_KEY])) {
+            return true;
+        }
         return $_SESSION[self::EXPIRES_KEY] < time();
     }
 }
