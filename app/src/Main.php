@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Auth\Session;
 use App\Core\Database;
 use App\Core\Router;
 use App\Handler\CreateArticleHandler;
@@ -11,6 +12,7 @@ use App\Handler\GetArticleHandler;
 use App\Handler\GetArticleListHandler;
 use App\Handler\GetTagListHandler;
 use App\Handler\LoginUserHandler;
+use App\Middleware\CheckLoginStatus as CheckLoginStatusMiddleware;
 use App\Repository\CreateArticleImageRepository;
 use App\Repository\CreateArticleRepository;
 use App\Repository\CreateArticleTagRepository;
@@ -69,7 +71,6 @@ class Main
 
     public function run(): void
     {
-        session_start();
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->router->add('GET', '/articles', function () {
@@ -81,6 +82,11 @@ class Main
         });
         $this->router->add('GET', '/articles/{id}', function (int $id) {
             echo $this->articleHandler->execute($id);
+        }, function () {
+            Session::start();
+            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                header(header: 'Location: /login');
+            }
         });
         $this->router->add('GET', '/register', function () {
             echo $this->registerUserView->execute();

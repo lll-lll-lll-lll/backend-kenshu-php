@@ -7,12 +7,13 @@ class Router
 {
     private array $routes = [];
 
-    public function add(string $method, string $route, callable $callback): void
+    public function add(string $method, string $route, callable $callback, callable $middleware = null): void
     {
         $this->routes[] = [
             'method' => $method,
             'route' => $route,
-            'callback' => $callback
+            'callback' => $callback,
+            'middleware' => $middleware
         ];
     }
 
@@ -23,6 +24,10 @@ class Router
             $pattern = '#^' . $pattern . '$#';
             if (preg_match($pattern, $requestUri, $matches) && $route['method'] === $requestMethod) {
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                if (!is_null($route['middleware'])) {
+                    $middleware = $route['middleware'];
+                    $middleware();
+                }
                 call_user_func_array($route['callback'], $params);
                 return;
             }
