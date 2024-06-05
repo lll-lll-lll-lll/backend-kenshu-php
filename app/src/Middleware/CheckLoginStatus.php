@@ -17,7 +17,7 @@ class CheckLoginStatus
      */
     public static function isLogin(array $session, array $cookie): bool
     {
-        if (!is_null($session[Session::USER_ID_KEY])) {
+        if (is_null($session[Session::USER_ID_KEY])) {
             return false;
         }
         if ($cookie[Session::SESSION_ID_KEY] !== session_id()) {

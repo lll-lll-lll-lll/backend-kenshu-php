@@ -32,16 +32,13 @@ class Session
     public static function setSession(int $userId): void
     {
         session_regenerate_id(true);
-        $_SESSION[Session::USER_ID_KEY] = $userId;
-        $_SESSION[Session::TIME_OUT_KEY] = Session::TIME_OUT;
-        $_SESSION[Session::EXPIRES_KEY] = time() + Session::TIME_OUT;
+        $_SESSION[self::USER_ID_KEY] = $userId;
+        $_SESSION[self::TIME_OUT_KEY] = self::TIME_OUT;
+        $_SESSION[self::EXPIRES_KEY] = time() + self::TIME_OUT;
     }
 
     public static function isSessionExpired(): bool
     {
-        if ($_SESSION[Session::EXPIRES_KEY] < time()) {
-            return false;
-        }
-        return true;
+        return $_SESSION[self::EXPIRES_KEY] > time();
     }
 }
