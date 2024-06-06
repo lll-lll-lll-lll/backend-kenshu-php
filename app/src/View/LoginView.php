@@ -15,6 +15,22 @@ class LoginView
         return '<p>メールアドレスもしくはパスワードが間違えています。</p>';
     }
 
+    public static function renderNotLogin(): string
+    {
+        return "
+                <!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'><title></title>
+                    <meta http-equiv='refresh' content='3'>
+                </head>
+                <body>
+                    <p>ログインをしてください。３秒後にリダイレクトします。</p>
+                </body>
+                </html>
+            ";
+    }
+
     public function execute(): string
     {
         return $this->loginForm();
