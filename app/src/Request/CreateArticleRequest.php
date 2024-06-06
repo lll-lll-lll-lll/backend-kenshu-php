@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Request;
 
+use App\Auth\Session;
 use InvalidArgumentException;
 
 class CreateArticleRequest
@@ -24,7 +25,7 @@ class CreateArticleRequest
      */
     public function __construct(array $dollPost, array $dollSession)
     {
-        $userId = $dollSession['user_id'];
+        $userId = $dollSession[Session::USER_ID_KEY];
         $title = $dollPost['title'];
         $contents = $dollPost['contents'];
         $thumbnailImageUrl = $dollPost['thumbnail_image_url'];
