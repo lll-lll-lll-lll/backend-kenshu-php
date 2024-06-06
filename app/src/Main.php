@@ -12,6 +12,7 @@ use App\Handler\Article\GetArticleListHandler;
 use App\Handler\Tag\GetTagListHandler;
 use App\Handler\User\CreateUserHandler;
 use App\Handler\User\LoginUserHandler;
+use App\Handler\User\LogoutUserHandler;
 use App\Middleware\CheckLoginStatus as CheckLoginStatusMiddleware;
 use App\Repository\Article\CreateArticleImageRepository;
 use App\Repository\Article\CreateArticleRepository;
@@ -27,8 +28,12 @@ use App\UseCase\Article\GetArticleUseCase;
 use App\UseCase\Tag\GetTagListUseCase;
 use App\UseCase\User\CreateUserUseCase;
 use App\UseCase\User\LoginUserUseCase;
+use App\UseCase\User\LogoutUseCase;
 use App\View\ArticleListView;
+use App\View\Header;
 use App\View\LoginView;
+use App\View\LogoutView;
+use App\View\MainView;
 use App\View\RegisterUserView;
 use Exception;
 use PDO;
@@ -45,7 +50,9 @@ class Main
     private RegisterUserView $registerUserView;
     private PDO $pdo;
     private LoginView $loginView;
+    private LogoutView $logoutView;
     private LoginUserHandler $loginUserHandler;
+    private LogoutUserHandler $logoutUserHandler;
 
     public function __construct()
     {
@@ -67,14 +74,16 @@ class Main
         $this->registerUserView = new RegisterUserView();
         $this->loginUserHandler = new LoginUserHandler(new LoginUserUseCase($this->pdo, new GetUserFromMail()));
         $this->loginView = new LoginView();
+        $this->logoutView = new LogoutView();
+        $this->logoutUserHandler = new LogoutUserHandler(new LogoutUseCase());
     }
 
     public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->router->add('GET', '/articles', function () {
-            echo $this->articleListView->render();
+        $this->router->add('GET', '/', function () {
+            echo MainView::render(new Header(), $this->articleListView);
         });
         $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
@@ -108,6 +117,24 @@ class Main
         $this->router->add('POST', '/api/login', function () {
             $this->loginUserHandler->execute();
             header('Location: /articles');
+        });
+        $this->router->add('GET', '/logout', function () {
+            echo $this->logoutView->execute();
+        }, function () {
+            Session::start();
+            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                header('Location: /');
+                exit();
+            }
+        });
+        $this->router->add('POST', '/api/logout', function () {
+            $this->logoutUserHandler->execute();
+            header('Location: /');
+        }, function () {
+            Session::start();
+            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                header('Location: /');
+            }
         });
         $this->router->add('POST', '/api/users', function () {
             $this->userCreateHandler->execute();

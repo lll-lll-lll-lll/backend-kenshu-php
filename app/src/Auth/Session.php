@@ -8,7 +8,7 @@ class Session
     // セッションの有効期限を設定. 7日間
     const int TIME_OUT = 7 * 24 * 60 * 60;
 
-    const string SESSION_ID_KEY = 'session_id';
+    const string SESSION_ID_KEY = 'PHPSESSID';
     const string USER_ID_KEY = 'user_id';
     const string EXPIRES_KEY = 'expires';
     const string TIME_OUT_KEY = 'timeout';
@@ -21,13 +21,13 @@ class Session
     public static function clean(): void
     {
         $_SESSION = array();
-        session_destroy();
+        session_regenerate_id(true);
     }
 
     /**
      * セッションの有効期限を設定する
      * @param int $userId
-     * @return array
+     * @return void
      */
     public static function setSession(int $userId): void
     {
@@ -48,5 +48,10 @@ class Session
             return true;
         }
         return $_SESSION[self::EXPIRES_KEY] < time();
+    }
+
+    public static function has(string $key): bool
+    {
+        return isset($_SESSION[$key]);
     }
 }
