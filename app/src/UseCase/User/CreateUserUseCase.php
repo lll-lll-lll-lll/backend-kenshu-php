@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\UseCase\User;
 
 use App\Model\UserPassword;
-use App\Repository\CreateUserRepository;
+use App\Repository\User\CreateUserRepository;
 use App\Request\CreateUserRequest;
 use Exception;
 use PDO;

@@ -5,7 +5,7 @@ namespace App\UseCase\User;
 
 use App\Auth\Cookie;
 use App\Auth\Session;
-use App\Repository\GetUserFromMail as GetUserFromMailRepository;
+use App\Repository\User\GetUserFromMail as GetUserFromMailRepository;
 use App\Request\LoginUserRequest;
 use Exception;
 use PDO;

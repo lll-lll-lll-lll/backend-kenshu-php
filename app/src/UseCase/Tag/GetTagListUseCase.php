@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCase;
+namespace App\UseCase\Tag;
 
 use App\Model\Tag;
-use App\Repository\GetTagListRepository;
+use App\Repository\Tag\GetTagListRepository;
 use Exception;
 use PDO;
 

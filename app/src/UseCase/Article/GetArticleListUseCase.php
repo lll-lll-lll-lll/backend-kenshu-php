@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCase;
+namespace App\UseCase\Article;
 
 use App\Model\Article;
-use App\Repository\GetArticleListRepository;
+use App\Repository\Article\GetArticleListRepository;
 use PDO;
 
 class GetArticleListUseCase

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCase;
+namespace App\UseCase\Article;
 
-use App\Repository\CreateArticleImageRepository;
-use App\Repository\CreateArticleRepository;
-use App\Repository\CreateArticleTagRepository;
+use App\Repository\Article\CreateArticleImageRepository;
+use App\Repository\Article\CreateArticleRepository;
+use App\Repository\Article\CreateArticleTagRepository;
 use App\Request\CreateArticleRequest;
 use Exception;
 use PDO;
