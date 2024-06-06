@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace App\Handler\Tag;
 
 use App\Model\Tag;
-use App\UseCase\GetTagListUseCase;
+use App\UseCase\Tag\GetTagListUseCase;
 use Exception;
 use PDO;
 

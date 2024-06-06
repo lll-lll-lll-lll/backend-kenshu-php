@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCase;
+namespace App\UseCase\Article;
 
 use App\Model\Article;
-use App\Repository\GetArticleRepository;
+use App\Repository\Article\GetArticleRepository;
 use Exception;
 use PDO;
 
