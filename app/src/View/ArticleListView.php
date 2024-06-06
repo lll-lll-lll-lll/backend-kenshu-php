@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use App\Handler\GetArticleListHandler;
-use App\Handler\GetTagListHandler;
+use App\Handler\Article\GetArticleListHandler;
+use App\Handler\Tag\GetTagListHandler;
 use App\Model\Article;
 use App\Model\Tag;
 use DateTime;
