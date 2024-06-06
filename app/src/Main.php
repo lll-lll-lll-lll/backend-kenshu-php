@@ -7,22 +7,25 @@ use App\Auth\Session;
 use App\Core\Database;
 use App\Core\Router;
 use App\Handler\Article\CreateArticleHandler;
+use App\Handler\Article\DeleteArticleHandler;
 use App\Handler\Article\GetArticleHandler;
 use App\Handler\Article\GetArticleListHandler;
 use App\Handler\Tag\GetTagListHandler;
 use App\Handler\User\CreateUserHandler;
 use App\Handler\User\LoginUserHandler;
 use App\Handler\User\LogoutUserHandler;
-use App\Middleware\CheckLoginStatus as CheckLoginStatusMiddleware;
+use App\Middleware\CheckLoginStatusMiddleware;
 use App\Repository\Article\CreateArticleImageRepository;
 use App\Repository\Article\CreateArticleRepository;
 use App\Repository\Article\CreateArticleTagRepository;
+use App\Repository\Article\DeleteArticleRepository;
 use App\Repository\Article\GetArticleListRepository;
 use App\Repository\Article\GetArticleRepository;
 use App\Repository\Tag\GetTagListRepository;
 use App\Repository\User\CreateUserRepository;
 use App\Repository\User\GetUserFromMail;
 use App\UseCase\Article\CreateArticleUseCase;
+use App\UseCase\Article\DeleteArticleUseCase;
 use App\UseCase\Article\GetArticleListUseCase;
 use App\UseCase\Article\GetArticleUseCase;
 use App\UseCase\Tag\GetTagListUseCase;
@@ -53,6 +56,7 @@ class Main
     private LogoutView $logoutView;
     private LoginUserHandler $loginUserHandler;
     private LogoutUserHandler $logoutUserHandler;
+    private DeleteArticleHandler $deleteArticleHandler;
 
     public function __construct()
     {
@@ -76,6 +80,7 @@ class Main
         $this->loginView = new LoginView();
         $this->logoutView = new LogoutView();
         $this->logoutUserHandler = new LogoutUserHandler(new LogoutUseCase());
+        $this->deleteArticleHandler = new DeleteArticleHandler(new DeleteArticleUseCase($this->pdo, new GetArticleRepository(), new DeleteArticleRepository()));
     }
 
     public function run(): void
@@ -87,7 +92,7 @@ class Main
         });
         $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
-            header('Location: /articles');
+            header('Location: /');
         }, function () {
             Session::start();
             if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
@@ -111,12 +116,21 @@ class Main
         }, function () {
             Session::start();
             if (CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
-                header('Location: /articles');
+                header('Location: /');
+            }
+        });
+        $this->router->add('POST', '/api/articles/delete', function () {
+            $this->deleteArticleHandler->execute();
+            header('Location: /');
+        }, function () {
+            Session::start();
+            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                header('Location: /');
             }
         });
         $this->router->add('POST', '/api/login', function () {
             $this->loginUserHandler->execute();
-            header('Location: /articles');
+            header('Location: /');
         });
         $this->router->add('GET', '/logout', function () {
             echo $this->logoutView->execute();
@@ -138,7 +152,7 @@ class Main
         });
         $this->router->add('POST', '/api/users', function () {
             $this->userCreateHandler->execute();
-            header('Location: /articles');
+            header('Location: /');
         });
         try {
             $this->router->dispatch($requestUri, $requestMethod);

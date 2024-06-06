@@ -20,6 +20,9 @@ class Session
 
     public static function clean(): void
     {
+        if (session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         $_SESSION = array();
         session_regenerate_id(true);
     }
@@ -31,6 +34,9 @@ class Session
      */
     public static function setSession(int $userId): void
     {
+        if (session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         session_regenerate_id(true);
         $_SESSION[self::USER_ID_KEY] = $userId;
         $_SESSION[self::TIME_OUT_KEY] = self::TIME_OUT;
@@ -43,6 +49,9 @@ class Session
      */
     public static function isSessionExpired(): bool
     {
+        if (session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         // セッションが存在しない場合は有効期限が切れているものとする。
         if (!isset($_SESSION[self::EXPIRES_KEY])) {
             return true;
@@ -52,6 +61,17 @@ class Session
 
     public static function has(string $key): bool
     {
+        if (!session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         return isset($_SESSION[$key]);
+    }
+
+    public static function get(string $key): mixed
+    {
+        if (session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        return $_SESSION[$key];
     }
 }
