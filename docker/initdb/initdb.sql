@@ -19,11 +19,32 @@ CREATE TABLE IF NOT EXISTS "article" (
 );
 
 CREATE TABLE IF NOT EXISTS "article_image" (
-  id serial PRIMARY KEY,
-  url text NOT NULL,
-  created_at timestamp default CURRENT_TIMESTAMP,
-  article_id integer NOT NULL,
-  CONSTRAINT fk_article_id FOREIGN KEY (article_id) REFERENCES article (id)
+                                               id
+                                               serial
+                                               PRIMARY
+                                               KEY,
+                                               url
+                                               text
+                                               NOT
+                                               NULL,
+                                               created_at
+                                               timestamp
+                                               default
+                                               CURRENT_TIMESTAMP,
+                                               article_id
+                                               integer
+                                               NOT
+                                               NULL,
+                                               CONSTRAINT
+                                               fk_article_id
+                                               FOREIGN
+                                               KEY
+(
+                                               article_id
+) REFERENCES article
+(
+    id
+) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS "tag" (
@@ -33,12 +54,39 @@ CREATE TABLE IF NOT EXISTS "tag" (
 );
 
 CREATE TABLE IF NOT EXISTS "article_tag" (
-  id serial PRIMARY KEY,
-  article_id integer NOT NULL,
-  tag_id integer NOT NULL,
-  created_at timestamp default CURRENT_TIMESTAMP,
-  CONSTRAINT fk_article_id FOREIGN KEY (article_id) REFERENCES article (id),
-  CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag (id)
+                                             id
+                                             serial
+                                             PRIMARY
+                                             KEY,
+                                             article_id
+                                             integer
+                                             NOT
+                                             NULL,
+                                             tag_id
+                                             integer
+                                             NOT
+                                             NULL,
+                                             created_at
+                                             timestamp
+                                             default
+                                             CURRENT_TIMESTAMP,
+                                             CONSTRAINT
+                                             fk_article_id
+                                             FOREIGN
+                                             KEY
+(
+                                             article_id
+) REFERENCES article
+(
+    id
+) ON DELETE CASCADE,
+    CONSTRAINT fk_tag_id FOREIGN KEY
+(
+    tag_id
+) REFERENCES tag
+(
+    id
+)
 );
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()
