@@ -5,7 +5,7 @@ namespace App\Middleware;
 
 use App\Auth\Session;
 
-class CheckLoginStatus
+class CheckLoginStatusMiddleware
 {
     public function __construct()
     {
