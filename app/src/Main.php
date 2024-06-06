@@ -111,7 +111,16 @@ class Main
         }, function () {
             Session::start();
             if (CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
-                header('Location: /articles');
+                header('Location: /');
+            }
+        });
+        $this->router->add('POST', '/api/articles/delete', function () {
+            $this->deleteArticleHandler->execute();
+            header('Location: /');
+        }, function () {
+            Session::start();
+            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                header('Location: /');
             }
         });
         $this->router->add('POST', '/api/login', function () {
