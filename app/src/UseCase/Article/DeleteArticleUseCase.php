@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\UseCase\Article;
 
-use App\Auth\Session;
 use App\Repository\Article\DeleteArticleRepository;
 use App\Repository\Article\GetArticleRepository;
 use Exception;
@@ -22,13 +21,12 @@ class DeleteArticleUseCase
         $this->deleteArticleRepository = $articleRepository;
     }
 
-    public function execute(int $articleId): void
+    public function execute(int $articleId, int $sessionUserId): void
     {
         try {
             $this->pdo->beginTransaction();
-            $sessionUserId = Session::get(Session::USER_ID_KEY);
             $article = $this->getArticleRepository->execute($this->pdo, $articleId);
-            if ($article->user_id !== (int)$sessionUserId) {
+            if ($article->user_id !== $sessionUserId) {
                 throw new Exception('削除権限がありません');
             }
             $this->deleteArticleRepository->execute($this->pdo, $article->id);

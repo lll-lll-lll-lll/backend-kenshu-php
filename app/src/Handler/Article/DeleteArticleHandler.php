@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Handler\Article;
 
+use App\Request\DeleteArticleRequest;
 use App\UseCase\Article\DeleteArticleUseCase;
 use Exception;
 
@@ -17,12 +18,9 @@ class DeleteArticleHandler
 
     public function execute(): void
     {
-        $articleId = $_POST['article_id'];
         try {
-            if ($articleId <= 0) {
-                throw new Exception('記事が存在しません');
-            }
-            $this->deleteArticleUseCase->execute((int)$articleId);
+            $req = new DeleteArticleRequest($_POST, $_SESSION);
+            $this->deleteArticleUseCase->execute($req->articleId, $req->userId);
         } catch (Exception) {
             http_response_code(500);
             echo $this->renderNoDeleteArticleAuthority();

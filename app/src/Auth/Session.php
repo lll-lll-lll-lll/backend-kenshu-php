@@ -20,7 +20,7 @@ class Session
 
     public static function clean(): void
     {
-        if (!session_status() != PHP_SESSION_ACTIVE) {
+        if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
         $_SESSION = array();
@@ -34,7 +34,7 @@ class Session
      */
     public static function setSession(int $userId): void
     {
-        if (!session_status() != PHP_SESSION_ACTIVE) {
+        if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
         session_regenerate_id(true);
@@ -49,7 +49,7 @@ class Session
      */
     public static function isSessionExpired(): bool
     {
-        if (!session_status() != PHP_SESSION_ACTIVE) {
+        if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
         // セッションが存在しない場合は有効期限が切れているものとする。
