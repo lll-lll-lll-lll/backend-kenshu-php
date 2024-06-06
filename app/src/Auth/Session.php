@@ -22,7 +22,6 @@ class Session
     {
         $_SESSION = array();
         session_regenerate_id(true);
-        session_destroy();
     }
 
     /**
