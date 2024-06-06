@@ -79,6 +79,12 @@ class Main
         $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
             header('Location: /articles');
+        }, function () {
+            Session::start();
+            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                echo LoginView::renderNotLogin();
+                exit();
+            }
         });
         $this->router->add('GET', '/articles/{id}', function (int $id) {
             echo $this->articleHandler->execute($id);
