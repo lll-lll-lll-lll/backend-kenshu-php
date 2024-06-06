@@ -82,8 +82,8 @@ class Main
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->router->add('GET', '/articles', function () {
-            echo $this->articleListView->render();
+        $this->router->add('GET', '/', function () {
+            echo MainView::render(new Header(), $this->articleListView);
         });
         $this->router->add('POST', '/articles', function () {
             $this->articleCreateHandler->execute();
