@@ -35,7 +35,7 @@ class ArticleListView
         } catch (Exception $e) {
             echo $e->getMessage();
             http_response_code(500);
-            header('Location: /articles');
+            header('Location: /');
             return '';
         }
     }
@@ -91,9 +91,17 @@ class ArticleListView
         $articleLinkHref = 'articles/' . $article->id;
         return "<a href={$articleLinkHref}>" . $title . "</a>" .
             '<p>' . $contents . '</p>' .
-            '<p>' . $formattedDate . '</p>';
+            '<p>' . $formattedDate . '</p>'
+            . $this->renderDeleteArticleButton($article->id);
     }
 
+    private function renderDeleteArticleButton(int $articleId): string
+    {
+        return "<form enctype='multipart/form-data' action='/api/articles/delete' method='POST'>
+            <input type='hidden' name='article_id' value='{$articleId}' required/>
+            <input type='submit' value='削除'>
+        </form>";
+    }
 
     private function renderContent(string $content): string
     {
