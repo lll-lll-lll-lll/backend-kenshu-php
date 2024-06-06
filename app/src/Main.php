@@ -93,6 +93,11 @@ class Main
         });
         $this->router->add('GET', '/login', function () {
             echo $this->loginView->execute();
+        }, function () {
+            Session::start();
+            if (CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+                header('Location: /articles');
+            }
         });
         $this->router->add('POST', '/api/login', function () {
             $this->loginUserHandler->execute();
