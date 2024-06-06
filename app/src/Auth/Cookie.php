@@ -9,6 +9,18 @@ class Cookie
     {
     }
 
+    public static function unSetCookie(string $key, $value): bool
+    {
+        $options = [
+            'expires' => time() - 3600,
+            'path' => '/',
+            'domain' => '',
+            'secure' => true,
+            'httponly' => true,
+        ];
+        return setcookie($key, $value, $options['expires'], $options['path'], $options['domain'], $options['secure'], $options['httponly']);
+    }
+
     public static function setCookie(string $key, string $value): bool
     {
         $options = [
