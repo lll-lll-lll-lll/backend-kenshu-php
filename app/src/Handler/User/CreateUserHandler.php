@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace App\Handler\User;
 
 use App\Request\CreateUserRequest;
 use App\UseCase\User\CreateUserUseCase;

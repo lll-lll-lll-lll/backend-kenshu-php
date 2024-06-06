@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace App\Handler\Article;
 
 use App\Model\Article;
-use App\UseCase\GetArticleListUseCase;
+use App\UseCase\Article\GetArticleListUseCase;
 
 class GetArticleListHandler
 {
