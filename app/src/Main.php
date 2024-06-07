@@ -15,8 +15,8 @@ use App\Handler\Tag\GetTagListHandler;
 use App\Handler\User\CreateUserHandler;
 use App\Handler\User\LoginUserHandler;
 use App\Handler\User\LogoutUserHandler;
-use App\Middleware\CheckLoginStatusMiddleware;
-use App\Middleware\CheckUserHasArticleAuthority;
+use App\Middleware\IsLoginMiddleware;
+use App\Middleware\UserHasArticleAuthorityMiddleware;
 use App\Repository\Article\CreateArticleImageRepository;
 use App\Repository\Article\CreateArticleRepository;
 use App\Repository\Article\CreateArticleTagRepository;
@@ -104,7 +104,7 @@ class Main
             header('Location: /');
         }, function () {
             Session::start();
-            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
                 echo LoginView::renderNotLogin();
                 exit();
             }
@@ -119,7 +119,7 @@ class Main
             echo $this->loginView->execute();
         }, function () {
             Session::start();
-            if (CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+            if (IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
                 header('Location: /');
             }
         });
@@ -128,7 +128,7 @@ class Main
             header('Location: /');
         }, function () {
             Session::start();
-            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
                 header('Location: /');
             }
         });
@@ -140,7 +140,7 @@ class Main
             echo $this->logoutView->execute();
         }, function () {
             Session::start();
-            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
                 header('Location: /');
                 exit();
             }
@@ -149,11 +149,11 @@ class Main
             echo ArticleUpdateView::execute($id);
         }, function (string $id) {
             Session::start();
-            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
                 echo LoginView::renderNotLogin();
                 exit();
             }
-            if (!CheckUserHasArticleAuthority::execute($this->pdo, $this->getArticleRepository, $id, $_SESSION, $_COOKIE)) {
+            if (!UserHasArticleAuthorityMiddleware::execute($this->pdo, $this->getArticleRepository, $id, $_SESSION, $_COOKIE)) {
                 echo ArticleUpdateView::renderNotAuthority();
                 exit();
             }
@@ -163,7 +163,7 @@ class Main
             header('Location: /');
         }, function () {
             Session::start();
-            if (!CheckUserHasArticleAuthority::execute($this->pdo, $this->getArticleRepository, $_POST['article_id'], $_SESSION, $_COOKIE)) {
+            if (!UserHasArticleAuthorityMiddleware::execute($this->pdo, $this->getArticleRepository, $_POST['article_id'], $_SESSION, $_COOKIE)) {
                 echo ArticleUpdateView::renderNotAuthority();
                 exit();
             }
@@ -173,7 +173,7 @@ class Main
             header('Location: /');
         }, function () {
             Session::start();
-            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
                 echo LoginView::renderNotLogin();
                 exit();
             }

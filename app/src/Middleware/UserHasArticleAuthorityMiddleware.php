@@ -11,7 +11,7 @@ use PDO;
 /**
  * Check if the user has the authority to update the article
  */
-class CheckUserHasArticleAuthority
+class UserHasArticleAuthorityMiddleware
 {
     /**
      * @param array $dollSession
@@ -24,7 +24,7 @@ class CheckUserHasArticleAuthority
         try {
             $req = new UserHasArticleAuthorityRequest($articleId, $dollSession);
             // Check if the user is logged in
-            if (!CheckLoginStatusMiddleware::isLogin($dollSession, $dollCookie)) {
+            if (!IsLoginMiddleware::execute($dollSession, $dollCookie)) {
                 return false;
             }
             $article = $getArticleRepository->execute($pdo, $req->articleId);

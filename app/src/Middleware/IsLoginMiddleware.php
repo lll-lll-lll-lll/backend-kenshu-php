@@ -5,7 +5,7 @@ namespace App\Middleware;
 
 use App\Auth\Session;
 
-class CheckLoginStatusMiddleware
+class IsLoginMiddleware
 {
     public function __construct()
     {
@@ -15,7 +15,7 @@ class CheckLoginStatusMiddleware
      *
      * @return bool ログインしている場合true
      */
-    public static function isLogin(array $session, array $cookie): bool
+    public static function execute(array $session, array $cookie): bool
     {
         if (!isset($session[Session::USER_ID_KEY])) {
             return false;
