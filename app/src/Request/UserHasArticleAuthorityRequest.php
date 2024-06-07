@@ -16,9 +16,6 @@ class UserHasArticleAuthorityRequest
         $sessionUserId = (int)$dollSession[Session::USER_ID_KEY];
         $articleIdInt = (int)$articleId;
 
-        if (!isset($articleId) || !isset($sessionUserId)) {
-            throw new Exception('記事IDまたはユーザーIDが設定されていません。');
-        }
         if ($articleId < 1 || $sessionUserId < 1) {
             throw new Exception('記事IDまたはユーザーIDが正しくありません');
         }
