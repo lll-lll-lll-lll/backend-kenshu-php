@@ -32,10 +32,7 @@ class UpdateArticleUseCase
         try {
             $this->pdo->beginTransaction();
             $article = $this->getArticleRepository->execute($this->pdo, $req->article_id);
-            if ($article->user_id !== $req->userId) {
-                throw new Exception('更新権限がありません');
-            }
-            $this->updateArticleRepository->execute($this->pdo, $req->article_id, $req->title, $req->content);
+            $this->updateArticleRepository->execute($this->pdo, $article->id, $req->title, $req->content);
             $this->pdo->commit();
         } catch (Exception $e) {
             $this->pdo->rollBack();
