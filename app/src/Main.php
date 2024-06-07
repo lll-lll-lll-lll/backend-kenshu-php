@@ -111,11 +111,6 @@ class Main
         });
         $this->router->add('GET', '/articles/{id}', function (int $id) {
             echo $this->articleHandler->execute($id);
-        }, function () {
-            Session::start();
-            if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
-                header(header: 'Location: /login');
-            }
         });
         $this->router->add('GET', '/register', function () {
             echo $this->registerUserView->execute();
@@ -179,7 +174,8 @@ class Main
         }, function () {
             Session::start();
             if (!CheckLoginStatusMiddleware::isLogin($_SESSION, $_COOKIE)) {
-                header('Location: /');
+                echo LoginView::renderNotLogin();
+                exit();
             }
         });
         $this->router->add('POST', '/api/users', function () {
