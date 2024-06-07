@@ -22,7 +22,7 @@ class LoginView
                 <html lang='en'>
                 <head>
                     <meta charset='UTF-8'><title></title>
-                    <meta http-equiv='refresh' content='3'>
+                    <meta http-equiv='refresh' content='3;url=/login'>
                 </head>
                 <body>
                     <p>ログインをしてください。３秒後にリダイレクトします。</p>
