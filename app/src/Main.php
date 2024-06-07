@@ -149,10 +149,6 @@ class Main
             echo ArticleUpdateView::execute($id);
         }, function (string $id) {
             Session::start();
-            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
-                echo LoginView::renderNotLogin();
-                exit();
-            }
             if (!UserHasArticleAuthorityMiddleware::execute($this->pdo, $this->getArticleRepository, $id, $_SESSION, $_COOKIE)) {
                 echo ArticleUpdateView::renderNotAuthority();
                 exit();
