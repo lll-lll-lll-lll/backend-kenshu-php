@@ -12,9 +12,11 @@ use Exception;
 class ArticleUpdateView
 {
     private GetUpdateArticleViewHandler $getUpdateArticleViewHandler;
+    private TagListView $tagListView;
 
-    public function __construct(GetUpdateArticleViewHandler $getUpdateArticleViewHandler)
+    public function __construct(TagListView $tagListView, GetUpdateArticleViewHandler $getUpdateArticleViewHandler)
     {
+        $this->tagListView = $tagListView;
         $this->getUpdateArticleViewHandler = $getUpdateArticleViewHandler;
     }
 
@@ -22,6 +24,7 @@ class ArticleUpdateView
     {
         try {
             $this->getUpdateArticleViewHandler->execute($articleId);
+            $tagsHTML = $this->tagListView->execute();
         } catch (Exception) {
             return self::renderNotAuthority();
         }
@@ -47,6 +50,11 @@ class ArticleUpdateView
                     <label for="content">本文</label>
                     <textarea id="content" name="content">{$content}</textarea>
                 </div>
+                <div>
+                    <label for='tags'>タグを選択してください</label><br>
+                    <select id='tags' name='tags[]' multiple>
+                        {$tagsHTML}
+                    </select><br>
                 <button type="submit">更新</button>
             </form>
         </body>
