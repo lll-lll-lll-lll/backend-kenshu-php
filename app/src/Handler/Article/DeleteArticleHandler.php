@@ -22,7 +22,6 @@ class DeleteArticleHandler
             $req = new DeleteArticleRequest($_POST, $_SESSION);
             $this->deleteArticleUseCase->execute($req->articleId, $req->userId);
         } catch (Exception) {
-            http_response_code(500);
             echo $this->renderNoDeleteArticleAuthority();
         }
     }

@@ -31,7 +31,7 @@ class UpdateArticleUseCase
     {
         try {
             $this->pdo->beginTransaction();
-            $article = $this->getArticleRepository->execute($this->pdo, $req->article_id);
+            $article = $this->getArticleRepository->execute($this->pdo, $req->articleId);
             $this->updateArticleRepository->execute($this->pdo, $article->id, $req->title, $req->content);
             $this->pdo->commit();
         } catch (Exception $e) {

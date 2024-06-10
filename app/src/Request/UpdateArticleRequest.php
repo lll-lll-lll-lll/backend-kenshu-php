@@ -8,10 +8,10 @@ use Exception;
 
 class UpdateArticleRequest
 {
-    public int $article_id;
+    public int $articleId;
     public string $title;
     public string $content;
-    public int $userId;
+    public int $sessionUserId;
 
     public function __construct(array $dollPost, array $dollSession)
     {
@@ -22,9 +22,9 @@ class UpdateArticleRequest
         if ($articleId < 1) {
             throw new Exception('article_id is not int or less than 1.');
         }
-        $this->article_id = $articleId;
+        $this->articleId = $articleId;
         $this->title = $dollPost['title'];
         $this->content = $dollPost['content'];
-        $this->userId = (int)$dollSession[Session::USER_ID_KEY];
+        $this->sessionUserId = (int)$dollSession[Session::USER_ID_KEY];
     }
 }
