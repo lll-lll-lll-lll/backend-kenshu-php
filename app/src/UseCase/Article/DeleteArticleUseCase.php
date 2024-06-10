@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\UseCase\Article;
 
 use App\Repository\Article\DeleteArticleRepository;
-use App\Repository\Article\GetArticleRepository;
+use App\Repository\Article\GetArticleByUseId;
 use Exception;
 use PDO;
 
@@ -12,12 +12,12 @@ class DeleteArticleUseCase
 {
     private PDO $pdo;
     private DeleteArticleRepository $deleteArticleRepository;
-    private GetArticleRepository $getArticleRepository;
+    private GetArticleByUseId $getArticleByUserIdRepository;
 
-    public function __construct(PDO $pdo, GetArticleRepository $getArticleRepository, DeleteArticleRepository $articleRepository)
+    public function __construct(PDO $pdo, GetArticleByUseId $getArticleByUserIdRepository, DeleteArticleRepository $articleRepository)
     {
         $this->pdo = $pdo;
-        $this->getArticleRepository = $getArticleRepository;
+        $this->getArticleByUserIdRepository = $getArticleByUserIdRepository;
         $this->deleteArticleRepository = $articleRepository;
     }
 
@@ -25,10 +25,7 @@ class DeleteArticleUseCase
     {
         try {
             $this->pdo->beginTransaction();
-            $article = $this->getArticleRepository->execute($this->pdo, $articleId);
-            if ($article->user_id !== $sessionUserId) {
-                throw new Exception('削除権限がありません');
-            }
+            $article = $this->getArticleByUserIdRepository->execute($this->pdo, $articleId, $sessionUserId);
             $this->deleteArticleRepository->execute($this->pdo, $article->id);
             $this->pdo->commit();
         } catch (Exception $e) {
