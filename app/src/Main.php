@@ -165,6 +165,12 @@ class Main
         $this->router->add('POST', '/api/article/update', function () {
             $this->updateArticleHandler->execute();
             header('Location: /');
+        }, function () {
+            Session::start();
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
+                echo LoginView::renderNotLogin();
+                exit();
+            }
         });
         $this->router->add('POST', '/api/logout', function () {
             $this->logoutUserHandler->execute();
