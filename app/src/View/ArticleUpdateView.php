@@ -3,14 +3,28 @@ declare(strict_types=1);
 
 namespace App\View;
 
+use App\Handler\Article\GetUpdateArticleViewHandler;
+use Exception;
+
+/**
+ * 記事更新ページ
+ */
 class ArticleUpdateView
 {
-    public function __construct()
+    private GetUpdateArticleViewHandler $getUpdateArticleViewHandler;
+
+    public function __construct(GetUpdateArticleViewHandler $getUpdateArticleViewHandler)
     {
+        $this->getUpdateArticleViewHandler = $getUpdateArticleViewHandler;
     }
 
-    public static function execute(int $article_id): string
+    public function execute(int $articleId): string
     {
+        try {
+            $this->getUpdateArticleViewHandler->execute($articleId);
+        } catch (Exception) {
+            return self::renderNotAuthority();
+        }
         $title = htmlspecialchars($_POST['title'] ?? '');
         $content = htmlspecialchars($_POST['content'] ?? '');
         return <<< EOT
@@ -24,7 +38,7 @@ class ArticleUpdateView
         <body>
             <h1>記事更新</h1>
             <form action="/api/article/update" method="post">
-                <input type="hidden" name="article_id" value="{$article_id}">
+                <input type="hidden" name="article_id" value="{$articleId}">
                 <div>
                     <label for="title">タイトル</label>
                     <input type="text" id="title" name="title" value="{$title}">
