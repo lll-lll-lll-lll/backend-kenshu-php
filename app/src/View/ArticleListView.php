@@ -92,7 +92,8 @@ class ArticleListView
         return "<a href={$articleLinkHref}>" . $title . "</a>" .
             '<p>' . $contents . '</p>' .
             '<p>' . $formattedDate . '</p>'
-            . $this->renderDeleteArticleButton($article->id);
+            . $this->renderDeleteArticleButton($article->id)
+            . $this->renderUpdateArticleButton($article->id) . '<br>';
     }
 
     private function renderDeleteArticleButton(int $articleId): string
@@ -101,6 +102,11 @@ class ArticleListView
             <input type='hidden' name='article_id' value='{$articleId}' required/>
             <input type='submit' value='削除'>
         </form>";
+    }
+
+    private function renderUpdateArticleButton(int $articleId): string
+    {
+        return "<a href='/article/update/{$articleId}'>更新する</a>";
     }
 
     private function renderContent(string $content): string

@@ -25,8 +25,7 @@ class Router
             if (preg_match($pattern, $requestUri, $matches) && $route['method'] === $requestMethod) {
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
                 if (!is_null($route['middleware'])) {
-                    $middleware = $route['middleware'];
-                    $middleware();
+                    call_user_func_array($route['middleware'], $params);
                 }
                 call_user_func_array($route['callback'], $params);
                 return;
