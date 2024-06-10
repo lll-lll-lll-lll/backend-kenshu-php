@@ -21,7 +21,7 @@ use App\Repository\Article\CreateArticleImageRepository;
 use App\Repository\Article\CreateArticleRepository;
 use App\Repository\Article\CreateArticleTagRepository;
 use App\Repository\Article\DeleteArticleRepository;
-use App\Repository\Article\GetArticleByUseId;
+use App\Repository\Article\GetArticleByUseIdRepository;
 use App\Repository\Article\GetArticleListRepository;
 use App\Repository\Article\GetArticleRepository;
 use App\Repository\Article\UpdateArticleRepository;
@@ -68,7 +68,7 @@ class Main
     private GetArticleRepository $getArticleRepository;
     private GetUpdateArticleViewHandler $getUpdateArticleViewHandler;
     private ArticleUpdateView $articleUpdateView;
-    private GetArticleByUseId $getArticleByUseIdRepository;
+    private GetArticleByUseIdRepository $getArticleByUseIdRepository;
 
     public function __construct()
     {
@@ -82,7 +82,7 @@ class Main
                 new CreateArticleTagRepository(),
                 new CreateArticleImageRepository())
         );
-        $this->getArticleByUseIdRepository = new GetArticleByUseId();
+        $this->getArticleByUseIdRepository = new GetArticleByUseIdRepository();
         $this->getArticleRepository = new GetArticleRepository();
         $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));

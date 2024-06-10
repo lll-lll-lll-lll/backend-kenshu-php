@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\UseCase\Article;
 
 use App\Repository\Article\DeleteArticleRepository;
-use App\Repository\Article\GetArticleByUseId;
+use App\Repository\Article\GetArticleByUseIdRepository;
 use Exception;
 use PDO;
 
@@ -12,9 +12,9 @@ class DeleteArticleUseCase
 {
     private PDO $pdo;
     private DeleteArticleRepository $deleteArticleRepository;
-    private GetArticleByUseId $getArticleByUserIdRepository;
+    private GetArticleByUseIdRepository $getArticleByUserIdRepository;
 
-    public function __construct(PDO $pdo, GetArticleByUseId $getArticleByUserIdRepository, DeleteArticleRepository $articleRepository)
+    public function __construct(PDO $pdo, GetArticleByUseIdRepository $getArticleByUserIdRepository, DeleteArticleRepository $articleRepository)
     {
         $this->pdo = $pdo;
         $this->getArticleByUserIdRepository = $getArticleByUserIdRepository;

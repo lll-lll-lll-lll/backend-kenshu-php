@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\UseCase\Article;
 
 use App\Model\Article;
-use App\Repository\Article\GetArticleByUseId;
+use App\Repository\Article\GetArticleByUseIdRepository;
 use App\Request\UserHasArticleAuthorityRequest;
 use Exception;
 use PDO;
@@ -15,9 +15,9 @@ use PDO;
 class UserHasArticleAuthorityUseCase
 {
     private PDO $pdo;
-    private GetArticleByUseId $getArticleByUseId;
+    private GetArticleByUseIdRepository $getArticleByUseId;
 
-    public function __construct(PDO $pdo, GetArticleByUseId $getArticleByUseId)
+    public function __construct(PDO $pdo, GetArticleByUseIdRepository $getArticleByUseId)
     {
         $this->pdo = $pdo;
         $this->getArticleByUseId = $getArticleByUseId;
