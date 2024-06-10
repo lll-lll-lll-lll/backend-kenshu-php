@@ -10,17 +10,18 @@ use App\Handler\Article\CreateArticleHandler;
 use App\Handler\Article\DeleteArticleHandler;
 use App\Handler\Article\GetArticleHandler;
 use App\Handler\Article\GetArticleListHandler;
+use App\Handler\Article\GetUpdateArticleViewHandler;
 use App\Handler\Article\UpdateArticleHandler;
 use App\Handler\Tag\GetTagListHandler;
 use App\Handler\User\CreateUserHandler;
 use App\Handler\User\LoginUserHandler;
 use App\Handler\User\LogoutUserHandler;
 use App\Middleware\IsLoginMiddleware;
-use App\Middleware\UserHasArticleAuthorityMiddleware;
 use App\Repository\Article\CreateArticleImageRepository;
 use App\Repository\Article\CreateArticleRepository;
 use App\Repository\Article\CreateArticleTagRepository;
 use App\Repository\Article\DeleteArticleRepository;
+use App\Repository\Article\GetArticleByUseId;
 use App\Repository\Article\GetArticleListRepository;
 use App\Repository\Article\GetArticleRepository;
 use App\Repository\Article\UpdateArticleRepository;
@@ -32,6 +33,7 @@ use App\UseCase\Article\DeleteArticleUseCase;
 use App\UseCase\Article\GetArticleListUseCase;
 use App\UseCase\Article\GetArticleUseCase;
 use App\UseCase\Article\UpdateArticleUseCase;
+use App\UseCase\Article\UserHasArticleAuthorityUseCase;
 use App\UseCase\Tag\GetTagListUseCase;
 use App\UseCase\User\CreateUserUseCase;
 use App\UseCase\User\LoginUserUseCase;
@@ -64,6 +66,9 @@ class Main
     private DeleteArticleHandler $deleteArticleHandler;
     private UpdateArticleHandler $updateArticleHandler;
     private GetArticleRepository $getArticleRepository;
+    private GetUpdateArticleViewHandler $getUpdateArticleViewHandler;
+    private ArticleUpdateView $articleUpdateView;
+    private GetArticleByUseId $getArticleByUseIdRepository;
 
     public function __construct()
     {
@@ -77,6 +82,7 @@ class Main
                 new CreateArticleTagRepository(),
                 new CreateArticleImageRepository())
         );
+        $this->getArticleByUseIdRepository = new GetArticleByUseId();
         $this->getArticleRepository = new GetArticleRepository();
         $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
@@ -88,8 +94,10 @@ class Main
         $this->loginView = new LoginView();
         $this->logoutView = new LogoutView();
         $this->logoutUserHandler = new LogoutUserHandler(new LogoutUseCase());
-        $this->deleteArticleHandler = new DeleteArticleHandler(new DeleteArticleUseCase($this->pdo, $this->getArticleRepository, new DeleteArticleRepository()));
-        $this->updateArticleHandler = new UpdateArticleHandler(new UpdateArticleUseCase($this->pdo, $this->getArticleRepository, new UpdateArticleRepository()));
+        $this->deleteArticleHandler = new DeleteArticleHandler(new DeleteArticleUseCase($this->pdo, $this->getArticleByUseIdRepository, new DeleteArticleRepository()));
+        $this->updateArticleHandler = new UpdateArticleHandler(new UpdateArticleUseCase($this->pdo, $this->getArticleRepository, new UpdateArticleRepository()), new UserHasArticleAuthorityUseCase($this->pdo, $this->getArticleByUseIdRepository));
+        $this->getUpdateArticleViewHandler = new GetUpdateArticleViewHandler(new UserHasArticleAuthorityUseCase($this->pdo, $this->getArticleByUseIdRepository));
+        $this->articleUpdateView = new ArticleUpdateView($this->getUpdateArticleViewHandler);
     }
 
     public function run(): void
@@ -146,23 +154,17 @@ class Main
             }
         });
         $this->router->add('GET', '/article/update/{id}', function (int $id) {
-            echo ArticleUpdateView::execute($id);
-        }, function (string $id) {
+            echo $this->articleUpdateView->execute($id);
+        }, function (int $id) {
             Session::start();
-            if (!UserHasArticleAuthorityMiddleware::execute($this->pdo, $this->getArticleRepository, $id, $_SESSION, $_COOKIE)) {
-                echo ArticleUpdateView::renderNotAuthority();
+            if (!IsLoginMiddleware::execute($_SESSION, $_COOKIE)) {
+                echo LoginView::renderNotLogin();
                 exit();
             }
         });
         $this->router->add('POST', '/api/article/update', function () {
             $this->updateArticleHandler->execute();
             header('Location: /');
-        }, function () {
-            Session::start();
-            if (!UserHasArticleAuthorityMiddleware::execute($this->pdo, $this->getArticleRepository, $_POST['article_id'], $_SESSION, $_COOKIE)) {
-                echo ArticleUpdateView::renderNotAuthority();
-                exit();
-            }
         });
         $this->router->add('POST', '/api/logout', function () {
             $this->logoutUserHandler->execute();
