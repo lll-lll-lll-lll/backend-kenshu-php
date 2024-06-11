@@ -25,6 +25,7 @@ use App\Repository\Article\GetArticleByUseIdRepository;
 use App\Repository\Article\GetArticleListRepository;
 use App\Repository\Article\GetArticleRepository;
 use App\Repository\Article\UpdateArticleRepository;
+use App\Repository\Article\UpdateArticleTagRepository;
 use App\Repository\Tag\GetTagListRepository;
 use App\Repository\User\CreateUserRepository;
 use App\Repository\User\GetUserFromMail;
@@ -45,6 +46,7 @@ use App\View\LoginView;
 use App\View\LogoutView;
 use App\View\MainView;
 use App\View\RegisterUserView;
+use App\View\TagListView;
 use Exception;
 use PDO;
 
@@ -69,6 +71,8 @@ class Main
     private GetUpdateArticleViewHandler $getUpdateArticleViewHandler;
     private ArticleUpdateView $articleUpdateView;
     private GetArticleByUseIdRepository $getArticleByUseIdRepository;
+    private TagListView $tagListView;
+    private UpdateArticleTagRepository $updateArticleTagRepository;
 
     public function __construct()
     {
@@ -82,12 +86,13 @@ class Main
                 new CreateArticleTagRepository(),
                 new CreateArticleImageRepository())
         );
+        $this->updateArticleTagRepository = new UpdateArticleTagRepository();
         $this->getArticleByUseIdRepository = new GetArticleByUseIdRepository();
         $this->getArticleRepository = new GetArticleRepository();
         $this->articleHandler = new GetArticleHandler(new GetArticleUseCase($this->pdo, new GetArticleRepository()));
         $this->articleListHandler = new GetArticleListHandler(new GetArticleListUseCase($this->pdo, new GetArticleListRepository()));
         $this->userCreateHandler = new CreateUserHandler(new CreateUserUseCase($this->pdo, new CreateUserRepository()));
-        $this->tagListHandler = new GetTagListHandler($this->pdo, new GetTagListUseCase($this->pdo, new GetTagListRepository()));
+        $this->tagListHandler = new GetTagListHandler(new GetTagListUseCase($this->pdo, new GetTagListRepository()));
         $this->articleListView = new ArticleListView($this->articleListHandler, $this->tagListHandler);
         $this->registerUserView = new RegisterUserView();
         $this->loginUserHandler = new LoginUserHandler(new LoginUserUseCase($this->pdo, new GetUserFromMail()));
@@ -95,9 +100,10 @@ class Main
         $this->logoutView = new LogoutView();
         $this->logoutUserHandler = new LogoutUserHandler(new LogoutUseCase());
         $this->deleteArticleHandler = new DeleteArticleHandler(new DeleteArticleUseCase($this->pdo, $this->getArticleByUseIdRepository, new DeleteArticleRepository()));
-        $this->updateArticleHandler = new UpdateArticleHandler(new UpdateArticleUseCase($this->pdo, $this->getArticleRepository, new UpdateArticleRepository()), new UserHasArticleAuthorityUseCase($this->pdo, $this->getArticleByUseIdRepository));
+        $this->updateArticleHandler = new UpdateArticleHandler(new UpdateArticleUseCase($this->pdo, $this->getArticleRepository, new UpdateArticleRepository(), $this->updateArticleTagRepository), new UserHasArticleAuthorityUseCase($this->pdo, $this->getArticleByUseIdRepository));
         $this->getUpdateArticleViewHandler = new GetUpdateArticleViewHandler(new UserHasArticleAuthorityUseCase($this->pdo, $this->getArticleByUseIdRepository));
-        $this->articleUpdateView = new ArticleUpdateView($this->getUpdateArticleViewHandler);
+        $this->tagListView = new TagListView($this->tagListHandler);
+        $this->articleUpdateView = new ArticleUpdateView($this->tagListView, $this->getUpdateArticleViewHandler);
     }
 
     public function run(): void

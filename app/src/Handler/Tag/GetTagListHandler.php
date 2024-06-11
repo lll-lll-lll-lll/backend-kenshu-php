@@ -6,16 +6,13 @@ namespace App\Handler\Tag;
 use App\Model\Tag;
 use App\UseCase\Tag\GetTagListUseCase;
 use Exception;
-use PDO;
 
 class GetTagListHandler
 {
     public GetTagListUseCase $getTagListUseCase;
-    public PDO $pdo;
 
-    public function __construct(PDO $pdo, GetTagListUseCase $getTagListUseCase)
+    public function __construct(GetTagListUseCase $getTagListUseCase)
     {
-        $this->pdo = $pdo;
         $this->getTagListUseCase = $getTagListUseCase;
     }
 
