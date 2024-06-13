@@ -39,7 +39,7 @@ class CreateArticleHandler
                 <body>
                     <script>
                         alert('失敗しました');
-                        window.location.href = '/articles';
+                        window.location.href = '/';
                     </script>
                 </body>
                 </html>
