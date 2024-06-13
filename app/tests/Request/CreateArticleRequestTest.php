@@ -23,7 +23,7 @@ class CreateArticleRequestTest extends TestCase
 
         $this->assertSame($dollPost['title'], $request->title);
         $this->assertSame($dollPost['contents'], $request->contents);
-        $this->assertSame($dollPost['thumbnail_image_url'], $request->thumbnailImageUrl);
+        $this->assertSame($dollPost['thumbnail_image_url'], $request->thumbnailImagePath);
         $this->assertSame($user_id, $request->userId);
     }
 
