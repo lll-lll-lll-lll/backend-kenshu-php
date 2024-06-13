@@ -24,8 +24,9 @@ class CreateArticleRequest
      * tagsだけarray<int>型それ以外はstring
      * @param array<string, string|array<int>> $dollPost
      * @param array<string, string> $dollSession
+     * @param array<string, array> $dollFiles
      */
-    public function __construct(array $dollPost, array $dollSession)
+    public function __construct(array $dollPost, array $dollSession, array $dollFiles)
     {
         $userId = $dollSession[Session::USER_ID_KEY];
         $title = $dollPost['title'];
@@ -46,10 +47,10 @@ class CreateArticleRequest
         }
 
         $this->validateContents($contents);
-        $thumbnailFile = $_FILES['thumbnail_image_url'];
-        $subImg = $_FILES['sub_image'];
+        $thumbnailFile = $dollFiles['thumbnail_image_url'];
+        $subImg = $dollFiles['sub_image'];
 
-        $thumbnailImagePath = $this->validateImgUrl($thumbnailFile);
+        $thumbnailImagePath = $this->validateImgUrl($thumbnailFile,);
         $subFilePath = $this->validateImgUrl($subImg);
 
         $this->title = $title;
@@ -76,17 +77,12 @@ class CreateArticleRequest
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0755, true);
         }
-        if (!isset($file) || $_FILES['thumbnail_image_url']['error'] !== UPLOAD_ERR_OK) {
+        if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
             throw new InvalidArgumentException('File is required and must be uploaded successfully');
         }
         $target_file = $target_dir . basename($file["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         if (!in_array($imageFileType, $this->allowedExtensions)) {
-            throw new InvalidArgumentException('File is not an image');
-        }
-
-        $check = getimagesize($file["tmp_name"]);
-        if (!$check) {
             throw new InvalidArgumentException('File is not an image');
         }
 

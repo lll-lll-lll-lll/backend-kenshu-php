@@ -3,7 +3,6 @@
 namespace Request;
 
 use App\Request\CreateArticleRequest;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class CreateArticleRequestTest extends TestCase
@@ -18,44 +17,27 @@ class CreateArticleRequestTest extends TestCase
             'tags' => ['1', '2'],
         ];
         $dollSession = ['user_id' => $user_id];
+        $dollFiles = [
+            'thumbnail_image_url' => [
+                'name' => '63499912.jpg',
+                'type' => 'image/jpeg',
+                'tmp_name' => '/tmp/63499912.jpeg',
+                'error' => 0,
+                'size' => 1000,
+            ],
+            'sub_image' => [
+                'name' => '63499912.jpg',
+                'type' => 'image/jpeg',
+                'tmp_name' => '/tmp/63499912.jpeg',
+                'error' => 0,
+                'size' => 1000,
+            ],
+        ];
 
-        $request = new CreateArticleRequest($dollPost, $dollSession);
+        $request = new CreateArticleRequest($dollPost, $dollSession, $dollFiles);
 
         $this->assertSame($dollPost['title'], $request->title);
         $this->assertSame($dollPost['contents'], $request->contents);
-        $this->assertSame($dollPost['thumbnail_image_url'], $request->thumbnailImagePath);
         $this->assertSame($user_id, $request->userId);
-    }
-
-    public function testCreateInvalidUrl(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid URL');
-        $user_id = 1;
-        $dollPost = [
-            'title' => 'title',
-            'contents' => 'contents',
-            'thumbnail_image_url' => 'invalid_url',
-            'tags' => ['1', '2'],
-        ];
-        $dollSession = ['user_id' => $user_id];
-        new CreateArticleRequest($dollPost, $dollSession);
-    }
-
-    public function testNotValidExtension(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid file extension: pdf');
-
-        $user_id = 1;
-        $dollPost = [
-            'title' => 'title',
-            'contents' => 'contents',
-            'thumbnail_image_url' => 'https://example.com/image.pdf',
-            'tags' => ['1', '2'],
-        ];
-        $dollSession = ['user_id' => $user_id];
-
-        new CreateArticleRequest($dollPost, $dollSession);
     }
 }
