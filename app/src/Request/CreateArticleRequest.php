@@ -8,13 +8,15 @@ use InvalidArgumentException;
 
 class CreateArticleRequest
 {
+    const int MAX_FILE_SIZE = 5000000;
     public string $title;
     public string $contents;
-    public string $thumbnailImageUrl;
+    public string $thumbnailImagePath;
+    public string $subImgPath;
     public int $userId;
+    // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
     /** @var array<int> */
     public array $tagIds;
-    // 記事コンテンツはDBでTEXT型で保存されることを考慮して、3000文字以内であることを保証する
     private int $maxContentsLength = 3000;
     private array $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
@@ -22,13 +24,13 @@ class CreateArticleRequest
      * tagsだけarray<int>型それ以外はstring
      * @param array<string, string|array<int>> $dollPost
      * @param array<string, string> $dollSession
+     * @param array<string, array> $dollFiles
      */
-    public function __construct(array $dollPost, array $dollSession)
+    public function __construct(array $dollPost, array $dollSession, array $dollFiles)
     {
         $userId = $dollSession[Session::USER_ID_KEY];
         $title = $dollPost['title'];
         $contents = $dollPost['contents'];
-        $thumbnailImageUrl = $dollPost['thumbnail_image_url'];
         $tags = $dollPost['tags'];
 
         if (empty($tags)) {
@@ -45,10 +47,16 @@ class CreateArticleRequest
         }
 
         $this->validateContents($contents);
-        $thumbnailImageUrl = $this->validateImgUrl($thumbnailImageUrl);
+        $thumbnailFile = $dollFiles['thumbnail_image_url'];
+        $subImg = $dollFiles['sub_image'];
+
+        $thumbnailImagePath = $this->validateImgUrl($thumbnailFile,);
+        $subFilePath = $this->validateImgUrl($subImg);
+
         $this->title = $title;
         $this->contents = $contents;
-        $this->thumbnailImageUrl = $thumbnailImageUrl;
+        $this->thumbnailImagePath = $thumbnailImagePath;
+        $this->subImgPath = $subFilePath;
         $this->userId = (int)$userId;
         $this->tagIds = $tags;
     }
@@ -63,15 +71,24 @@ class CreateArticleRequest
         }
     }
 
-    private function validateImgUrl(string $filePath): string
+    private function validateImgUrl(array $file): string
     {
-        if (!filter_var($filePath, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException('Invalid URL');
+        $target_dir = "tmp/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true);
         }
-        $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-        if (!in_array(strtolower($fileExtension), $this->allowedExtensions)) {
-            throw new InvalidArgumentException('Invalid file extension: ' . $fileExtension);
+        if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+            throw new InvalidArgumentException('File is required and must be uploaded successfully');
         }
-        return $filePath;
+        $target_file = $target_dir . basename($file["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        if (!in_array($imageFileType, $this->allowedExtensions)) {
+            throw new InvalidArgumentException('File is not an image');
+        }
+
+        if ($file["size"] > self::MAX_FILE_SIZE) {
+            throw new InvalidArgumentException('File is too large');
+        }
+        return $target_file;
     }
 }

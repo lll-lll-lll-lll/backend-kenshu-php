@@ -36,18 +36,22 @@ class CreateArticleUseCase
     {
         try {
             $this->pdo->beginTransaction();
-            try {
-                $articleId = $this->createArticleRepository->execute($this->pdo, $req->title, $req->contents, $req->userId);
-                $this->createArticleImageRepository->execute($this->pdo, $req->thumbnailImageUrl, $articleId);
-                $this->createArticleTagRepository->execute($this->pdo, $articleId, $req->tagIds);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
+            $articleId = $this->createArticleRepository->execute($this->pdo, $req->title, $req->contents, $req->userId);
+            $this->fileUpload($req->thumbnailImagePath, 'thumbnail_image_url');
+            $this->fileUpload($req->subImgPath, 'sub_image');
+            $this->createArticleImageRepository->execute($this->pdo, $req->thumbnailImagePath, $req->subImgPath, $articleId);
+            $this->createArticleTagRepository->execute($this->pdo, $articleId, $req->tagIds);
             $this->pdo->commit();
         } catch (Exception $e) {
-            echo $e->getMessage();
             $this->pdo->rollBack();
             throw new Exception($e->getMessage());
+        }
+    }
+
+    private function fileUpload(string $thumbnailImagePath, string $fileName): void
+    {
+        if (!move_uploaded_file($_FILES[$fileName]["tmp_name"], $thumbnailImagePath)) {
+            throw new Exception('failed to move uploaded file');
         }
     }
 }
