@@ -10,14 +10,34 @@ class Article
     public string $title;
     public string $contents;
     public string $created_at;
-    public int $user_id;
+    public User $user;
+    /**
+     * @var Tag[]
+     */
+    public array $tags;
+    /**
+     * @var ArticleImage
+     */
+    public array $articleImages;
 
-    public function __construct(int $id, string $title, string $contents, string $created_at, int $user_id)
+    /**
+     * Article constructor.
+     * @param int $id
+     * @param string $title
+     * @param string $contents
+     * @param string $created_at
+     * @param User $user
+     * @param Tag[] $tag
+     * @param ArticleImage[] $articleImage
+     */
+    public function __construct(int $id, string $title, string $contents, string $created_at, User $user, array $tags, array $articleImages)
     {
         $this->id = $id;
         $this->title = $title;
         $this->contents = $contents;
         $this->created_at = $created_at;
-        $this->user_id = $user_id;
+        $this->user = $user;
+        $this->tags = $tags;
+        $this->articleImages = $articleImages;
     }
 }
