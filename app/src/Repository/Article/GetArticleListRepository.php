@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace App\Repository\Article;
 
 use App\Model\Article;
-use App\Model\ArticleImage;
-use App\Model\Tag;
-use App\Model\User;
 use PDO;
 
 class GetArticleListRepository
@@ -55,39 +52,7 @@ class GetArticleListRepository
          */
         $articles = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $articleId = $row['article_id'];
-
-            $user = new User(
-                id: (int)$row['user_id'],
-                name: $row['user_name'],
-                mail: $row['user_mail'],
-                profileUrl: $row['user_profile_url'],
-            );
-            $tag = new Tag(
-                id: (int)$row['tag_id'],
-                name: $row['tag_name']
-            );
-
-            $articleImage = new ArticleImage(
-                $row['thumbnail_image_path'],
-                $row['sub_image_path']
-            );
-
-            if (!isset($articles[$articleId])) {
-                $articles[$articleId] = new Article(
-                    (int)$articleId,
-                    $row['title'],
-                    $row['contents'],
-                    $row['article_created_at'],
-                    $user,
-                    [],
-                    []
-                );
-            }
-
-            $articles[$articleId]->tags[] = $tag;
-            $articles[$articleId]->articleImages[] = $articleImage;
-            $articles[$articleId]->user = $user;
+            $articles = Article::mapping($row);
         }
         return $articles;
     }

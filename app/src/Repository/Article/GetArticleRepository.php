@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace App\Repository\Article;
 
 use App\Model\Article;
-use App\Model\ArticleImage;
-use App\Model\Tag;
-use App\Model\User;
 use Exception;
 use PDO;
 
@@ -49,23 +46,8 @@ class GetArticleRepository
             if ($result === false) {
                 throw new Exception("Article with ID $id not found.");
             }
-
-            $user = new User(
-                id: (int)$result['user_id'],
-                name: $result['user_name'],
-                mail: $result['user_mail'],
-                profileUrl: $result['user_profile_url'],
-            );
-            $tag = new Tag(
-                id: (int)$result['tag_id'],
-                name: $result['tag_name']
-            );
-
-            $articleImage = new ArticleImage(
-                $result['thumbnail_image_path'],
-                $result['sub_image_path']
-            );
-            return new Article(id: $result['article_id'], title: $result['title'], contents: $result['contents'], created_at: $result['article_created_at'], user: $user, tags: (array)$tag, articleImages: (array)$articleImage);
+            $articleId = $result['article_id'];
+            return Article::mapping($result)[$articleId];
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
