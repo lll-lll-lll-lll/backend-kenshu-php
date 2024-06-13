@@ -88,15 +88,3 @@ INSERT INTO "tag" (name)
 VALUES ('スポーツ');
 
 
--- サンプルデータの挿入
--- user テーブルにサンプルデータを挿入（必要に応じて）
-INSERT INTO "user" (name, mail, password, profile_url)
-VALUES ('John Doe', 'john@example.com', 'password', 'https://example.com/profiles/john'),
-       ('Jane Smith', 'jane@example.com', 'password', 'https://example.com/profiles/jane');
-
-INSERT INTO "article" (title, contents, user_id)
-VALUES ('First Article', 'This is the content of the first article.', 1),
-       ('Second Article', 'This is the content of the second article.', 2),
-       ('Third Article', 'This is the content of the third article.', 1);
-
-
