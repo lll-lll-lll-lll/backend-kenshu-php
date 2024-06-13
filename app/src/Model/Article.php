@@ -30,7 +30,7 @@ class Article
      * @param Tag[] $tag
      * @param ArticleImage[] $articleImage
      */
-    public function __construct(int $id, string $title, string $contents, string $created_at, User $user, array $tags, array $articleImages)
+    public function __construct(int $id, string $title, string $contents, string $created_at, array $tags, array $articleImages, User $user)
     {
         $this->id = $id;
         $this->title = $title;
@@ -39,5 +39,48 @@ class Article
         $this->user = $user;
         $this->tags = $tags;
         $this->articleImages = $articleImages;
+    }
+
+    /**
+     * DBの出力結果をArticleクラスにマッピングする
+     * @param mixed $row
+     * @return Article[]
+     */
+    public static function mapping(mixed $row): array
+    {
+        $articleId = $row['article_id'];
+
+        $user = new User(
+            id: (int)$row['user_id'],
+            name: $row['user_name'],
+            mail: $row['user_mail'],
+            profileUrl: $row['user_profile_url'],
+        );
+        $tag = new Tag(
+            id: (int)$row['tag_id'],
+            name: $row['tag_name']
+        );
+
+        $articleImage = new ArticleImage(
+            $row['thumbnail_image_path'],
+            $row['sub_image_path']
+        );
+
+        if (!isset($articles[$articleId])) {
+            $articles[$articleId] = new Article(
+                (int)$articleId,
+                $row['title'],
+                $row['contents'],
+                $row['article_created_at'],
+                [],
+                [],
+                $user
+            );
+        }
+
+        $articles[$articleId]->tags[] = $tag;
+        $articles[$articleId]->articleImages[] = $articleImage;
+        $articles[$articleId]->user = $user;
+        return $articles;
     }
 }
