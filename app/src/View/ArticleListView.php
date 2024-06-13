@@ -65,9 +65,10 @@ class ArticleListView
             <textarea id='contents' name='contents' rows='4' cols='50' required></textarea><br>
             
             <label for='image_url'>サムネイル画像のURLを入力してください</label><br>
-            <input type='text' name='thumbnail_image_url' id='thumbnail_image_url'><br>
-            
-           <label for='tags'>タグを選択してください</label><br>
+            <input type='file' name='thumbnail_image_url' id='thumbnail_image_url' accept='image/png, image/jpeg'>
+             <label for='image_url'>記事のサブ画像をアップロード</label><br>
+            <input type='file' name='sub_image' id='sub_image' accept='image/png, image/jpeg'>
+            <label for='tags'>タグを選択してください</label><br>
             <select id='tags' name='tags[]' multiple>
                 {$tagsHTML}
             </select><br>
