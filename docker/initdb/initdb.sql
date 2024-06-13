@@ -22,10 +22,11 @@ CREATE TABLE IF NOT EXISTS "article"
 
 CREATE TABLE IF NOT EXISTS "article_image"
 (
-    id         serial PRIMARY KEY,
-    url        text    NOT NULL,
-    created_at timestamp default CURRENT_TIMESTAMP,
-    article_id integer NOT NULL,
+    id                   serial PRIMARY KEY,
+    thumbnail_image_path text    NOT NULL,
+    sub_image_path       text    NOT NULL,
+    created_at           timestamp default CURRENT_TIMESTAMP,
+    article_id           integer NOT NULL,
     CONSTRAINT fk_article_id FOREIGN KEY (article_id) REFERENCES article (id) ON DELETE CASCADE
 );
 
@@ -98,12 +99,4 @@ VALUES ('First Article', 'This is the content of the first article.', 1),
        ('Second Article', 'This is the content of the second article.', 2),
        ('Third Article', 'This is the content of the third article.', 1);
 
-INSERT INTO "article_image" (url, article_id)
-VALUES ('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Pocket-Gopher_Ano-Nuevo-SP.jpg/250px-Pocket-Gopher_Ano-Nuevo-SP.jpg',
-        1),
-       ('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Pocket-Gopher_Ano-Nuevo-SP.jpg/250px-Pocket-Gopher_Ano-Nuevo-SP.jpg',
-        1),
-       ('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Pocket-Gopher_Ano-Nuevo-SP.jpg/250px-Pocket-Gopher_Ano-Nuevo-SP.jpg',
-        2),
-       ('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Pocket-Gopher_Ano-Nuevo-SP.jpg/250px-Pocket-Gopher_Ano-Nuevo-SP.jpg',
-        3);
+
