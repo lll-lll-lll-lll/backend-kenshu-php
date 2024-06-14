@@ -27,8 +27,8 @@ class Article
      * @param string $contents
      * @param string $created_at
      * @param User $user
-     * @param Tag[] $tag
-     * @param ArticleImage[] $articleImage
+     * @param Tag[] $tags
+     * @param ArticleImage[] $articleImages
      */
     public function __construct(int $id, string $title, string $contents, string $created_at, array $tags, array $articleImages, User $user)
     {
@@ -44,7 +44,7 @@ class Article
     /**
      * DBの出力結果をArticleクラスにマッピングする
      * @param mixed $row
-     * @return Article[]
+     * @return Article
      */
     public static function mapping(array $row): Article
     {
@@ -61,9 +61,11 @@ class Article
         $tagNames = $row['tag_names'] ? explode(',', trim($row['tag_names'], '{}')) : [];
 
         $articleImages = [];
-        foreach ($thumbnailImagePaths as $thumbnail) {
-            $articleImages[] = new ArticleImage($thumbnail, ''); // サブ画像の処理を追加する場合は適宜修正
+        foreach ($thumbnailImagePaths as $index => $thumbnail) {
+            $subImage = $subImagePaths[$index] ?? '';
+            $articleImages[] = new ArticleImage($thumbnail, $subImage);
         }
+
 
         $tags = [];
         foreach ($tagIds as $index => $tagId) {

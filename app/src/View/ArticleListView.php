@@ -94,6 +94,7 @@ class ArticleListView
             '<p>' . $contents . '</p>' .
             '<p>' . $formattedDate . '</p>'
             . '<img src="' . $article->articleImages[0]->thumbnail_image_path . '" alt="記事のサムネ画像">'
+            . '<img src="' . $article->articleImages[0]->sub_image_path . '" alt="記事のサブ画像">'
             . $this->renderDeleteArticleButton($article->id)
             . $this->renderUpdateArticleButton($article->id) . '<br>'
             . $this->renderUser($article);
