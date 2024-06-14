@@ -55,7 +55,8 @@ class GetArticleHandler
                     <h1>記事詳細</h1>
                     <h2>{$article->title}</h2>
                     <p>{$article->contents}</p>
-                    <p>{$article->created_at}</p>
+                    <p>記事作成日時{$article->created_at}</p>
+                    <p>ユーザ名{$article->user->name}</p>
                 </body>
                 </html>";
     }

@@ -93,8 +93,11 @@ class ArticleListView
         return "<a href={$articleLinkHref}>" . $title . "</a>" .
             '<p>' . $contents . '</p>' .
             '<p>' . $formattedDate . '</p>'
+            . '<img src="' . $article->articleImages[0]->thumbnail_image_path . '" alt="記事のサムネ画像">'
+            . '<img src="' . $article->articleImages[0]->sub_image_path . '" alt="記事のサブ画像">'
             . $this->renderDeleteArticleButton($article->id)
-            . $this->renderUpdateArticleButton($article->id) . '<br>';
+            . $this->renderUpdateArticleButton($article->id) . '<br>'
+            . $this->renderUser($article);
     }
 
     private function renderDeleteArticleButton(int $articleId): string
@@ -108,6 +111,14 @@ class ArticleListView
     private function renderUpdateArticleButton(int $articleId): string
     {
         return "<a href='/article/update/{$articleId}'>更新する</a>";
+    }
+
+    private function renderUser(Article $article): string
+    {
+        $userName = htmlspecialchars($article->user->name, ENT_QUOTES, 'UTF-8');
+        $userMail = htmlspecialchars($article->user->mail, ENT_QUOTES, 'UTF-8');
+        return "<p>ユーザー名: {$userName}</p>
+                <p>メールアドレス: {$userMail}</p>";
     }
 
     private function renderContent(string $content): string

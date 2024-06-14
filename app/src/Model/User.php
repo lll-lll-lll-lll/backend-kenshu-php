@@ -9,23 +9,19 @@ class User
     public string $name;
     public string $mail;
     public string $profileUrl;
-    public string $createdAt;
-    public string $updatedAt;
-    private string $hashPassword;
+    private string $password;
 
-    public function __construct(int $id, string $name, string $mail, string $password, string $profileUrl, string $createdAt, string $updatedAt)
+    public function __construct(int $id, string $name, string $mail, string $profileUrl, string $password = '')
     {
         $this->id = $id;
         $this->name = $name;
         $this->mail = $mail;
-        $this->hashPassword = $password;
         $this->profileUrl = $profileUrl;
-        $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+        $this->password = $password;
     }
 
     public function getHashPassword(): string
     {
-        return $this->hashPassword;
+        return $this->password;
     }
 }

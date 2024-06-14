@@ -15,14 +15,41 @@ class GetArticleRepository
     public function execute(PDO $pdo, int $id): Article
     {
         try {
-            $stmt = $pdo->prepare('SELECT id, title, contents, created_at, user_id FROM article WHERE id = :id');
+            $stmt = $pdo->prepare('
+            SELECT
+                article.id AS article_id,
+                article.title,
+                article.contents,
+                article.created_at AS article_created_at,
+                "user".id AS user_id,
+                "user".name AS user_name,
+                "user".mail AS user_mail,
+                "user".profile_url AS user_profile_url,
+                array_agg(article_image.thumbnail_image_path) AS thumbnail_image_paths,
+                array_agg(article_image.sub_image_path) AS sub_image_paths,
+                array_agg(tag.id) AS tag_ids,
+                array_agg(tag.name) AS tag_names
+            FROM
+                article 
+            JOIN
+                "user"  ON article.user_id = "user".id
+            LEFT JOIN
+                article_image ON article.id = article_image.article_id
+            LEFT JOIN
+                article_tag ON article.id = article_tag.article_id
+            LEFT JOIN
+                tag  ON article_tag.tag_id = tag.id
+            WHERE article.id = :id
+            GROUP BY
+                article.id, "user".id
+            ;');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($result === false) {
                 throw new Exception("Article with ID $id not found.");
             }
-            return new Article($result['id'], $result['title'], $result['contents'], $result['created_at'], $result['user_id']);
+            return Article::mapping($result);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
