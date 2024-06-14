@@ -16,32 +16,32 @@ class GetArticleRepository
     {
         try {
             $stmt = $pdo->prepare('
-           SELECT
-                a.id AS article_id,
-                a.title,
-                a.contents,
-                a.created_at AS article_created_at,
-                u.id AS user_id,
-                u.name AS user_name,
-                u.mail AS user_mail,
-                u.profile_url AS user_profile_url,
-                array_agg(ai.thumbnail_image_path) AS thumbnail_image_paths,
-                array_agg(ai.sub_image_path) AS sub_image_paths,
-                array_agg(t.id) AS tag_ids,
-                array_agg(t.name) AS tag_names
+            SELECT
+                article.id AS article_id,
+                article.title,
+                article.contents,
+                article.created_at AS article_created_at,
+                "user".id AS user_id,
+                "user".name AS user_name,
+                "user".mail AS user_mail,
+                "user".profile_url AS user_profile_url,
+                array_agg(article_image.thumbnail_image_path) AS thumbnail_image_paths,
+                array_agg(article_image.sub_image_path) AS sub_image_paths,
+                array_agg(tag.id) AS tag_ids,
+                array_agg(tag.name) AS tag_names
             FROM
-                article a
+                article 
             JOIN
-                "user" u ON a.user_id = u.id
+                "user"  ON article.user_id = "user".id
             LEFT JOIN
-                article_image ai ON a.id = ai.article_id
+                article_image ON article.id = article_image.article_id
             LEFT JOIN
-                article_tag at ON a.id = at.article_id
+                article_tag ON article.id = article_tag.article_id
             LEFT JOIN
-                tag t ON at.tag_id = t.id
-            WHERE a.id = :id
+                tag  ON article_tag.tag_id = tag.id
+            WHERE article.id = :id
             GROUP BY
-                a.id, u.id
+                article.id, "user".id
             ;');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
