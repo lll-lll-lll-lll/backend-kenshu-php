@@ -46,41 +46,37 @@ class Article
      * @param mixed $row
      * @return Article[]
      */
-    public static function mapping(mixed $row): array
+    public static function mapping(array $row): Article
     {
-        $articleId = $row['article_id'];
-
         $user = new User(
             id: (int)$row['user_id'],
             name: $row['user_name'],
             mail: $row['user_mail'],
             profileUrl: $row['user_profile_url'],
         );
-        $tag = new Tag(
-            id: (int)$row['tag_id'],
-            name: $row['tag_name']
-        );
 
-        $articleImage = new ArticleImage(
-            $row['thumbnail_image_path'],
-            $row['sub_image_path']
-        );
+        $thumbnailImagePaths = $row['thumbnail_image_paths'] ? explode(',', trim($row['thumbnail_image_paths'], '{}')) : [];
+        $subImagePaths = $row['sub_image_paths'] ? explode(',', trim($row['sub_image_paths'], '{}')) : [];
+        $tagIds = $row['tag_ids'] ? explode(',', trim($row['tag_ids'], '{}')) : [];
+        $tagNames = $row['tag_names'] ? explode(',', trim($row['tag_names'], '{}')) : [];
 
-        if (!isset($articles[$articleId])) {
-            $articles[$articleId] = new Article(
-                (int)$articleId,
-                $row['title'],
-                $row['contents'],
-                $row['article_created_at'],
-                [],
-                [],
-                $user
-            );
+        $articleImages = [];
+        foreach ($thumbnailImagePaths as $thumbnail) {
+            $articleImages[] = new ArticleImage($thumbnail, ''); // サブ画像の処理を追加する場合は適宜修正
         }
 
-        $articles[$articleId]->tags[] = $tag;
-        $articles[$articleId]->articleImages[] = $articleImage;
-        $articles[$articleId]->user = $user;
-        return $articles;
+        $tags = [];
+        foreach ($tagIds as $index => $tagId) {
+            $tags[] = new Tag((int)$tagId, $tagNames[$index]);
+        }
+        return new Article(
+            (int)$row['article_id'],
+            $row['title'],
+            $row['contents'],
+            $row['article_created_at'],
+            $tags,
+            $articleImages,
+            $user
+        );
     }
 }
